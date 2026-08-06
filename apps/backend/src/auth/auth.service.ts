@@ -26,12 +26,9 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<TokensAndUser> {
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(registerDto.password, saltRounds);
-
     const user = await this.usersService.create({
       email: registerDto.email,
-      passwordHash,
+      password: registerDto.password,
       name: registerDto.name,
       dailyGoal: registerDto.dailyGoal,
       timezone: registerDto.timezone,

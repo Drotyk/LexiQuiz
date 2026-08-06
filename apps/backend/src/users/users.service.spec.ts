@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ConflictException, BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
 
   const mockUser: User = {
-    id: 'test-uuid-1234',
+    id: 'user-1',
     email: 'test@example.com',
-    passwordHash: '$2b$10$hashedpassword',
+    passwordHash: 'hashedPass',
     name: 'Test User',
     dailyGoal: 10,
     timezone: 'UTC',
@@ -18,11 +19,10 @@ describe('UsersService', () => {
     updatedAt: new Date(),
   };
 
-  const mockRepository = {
+  const mockUserRepository = {
     findOne: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
-    createQueryBuilder: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: mockRepository,
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
@@ -45,50 +45,64 @@ describe('UsersService', () => {
   });
 
   describe('create', () => {
-    it('should create and return a new user', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
-      mockRepository.create.mockReturnValue(mockUser);
-      mockRepository.save.mockResolvedValue(mockUser);
+    it('should successfully create a new user', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+      mockUserRepository.create.mockReturnValue(mockUser);
+      mockUserRepository.save.mockResolvedValue(mockUser);
 
       const result = await service.create({
         email: 'test@example.com',
-        passwordHash: '$2b$10$hashedpassword',
+        password: 'password123',
         name: 'Test User',
       });
 
       expect(result).toEqual(mockUser);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { email: 'test@example.com' },
       });
     });
 
     it('should throw ConflictException if user email already exists', async () => {
-      mockRepository.findOne.mockResolvedValue(mockUser);
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
 
       await expect(
         service.create({
           email: 'test@example.com',
-          passwordHash: '$2b$10$hashedpassword',
+          password: 'password123',
           name: 'Test User',
         }),
       ).rejects.toThrow(ConflictException);
     });
   });
 
-  describe('findById', () => {
-    it('should return user if found', async () => {
-      mockRepository.findOne.mockResolvedValue(mockUser);
+  describe('updateProfile', () => {
+    it('should update name, dailyGoal, and timezone', async () => {
+      mockUserRepository.findOne.mockResolvedValue({ ...mockUser });
+      mockUserRepository.save.mockImplementation((u) => Promise.resolve(u));
 
-      const result = await service.findById('test-uuid-1234');
-      expect(result).toEqual(mockUser);
+      const updated = await service.updateProfile('user-1', {
+        name: 'New Name',
+        dailyGoal: 20,
+        timezone: 'Europe/Kyiv',
+      });
+
+      expect(updated.name).toBe('New Name');
+      expect(updated.dailyGoal).toBe(20);
+      expect(updated.timezone).toBe('Europe/Kyiv');
     });
+  });
 
-    it('should throw NotFoundException if user is not found', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
+  describe('updatePassword', () => {
+    it('should throw BadRequestException if current password is wrong', async () => {
+      mockUserRepository.findOne.mockResolvedValue({ ...mockUser });
+      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false) as any);
 
-      await expect(service.findById('non-existent-id')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updatePassword('user-1', {
+          currentPassword: 'wrongPassword',
+          newPassword: 'newSecretPassword123',
+        }),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

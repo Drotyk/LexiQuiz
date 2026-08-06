@@ -2,11 +2,15 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserDto } from '@wordforge/shared-types';
 
 @Injectable()
@@ -16,53 +20,52 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(data: {
-    email: string;
-    passwordHash: string;
-    name: string;
-    dailyGoal?: number;
-    timezone?: string;
-  }): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const { email, password, name, dailyGoal, timezone } = createUserDto;
+
     const existingUser = await this.userRepository.findOne({
-      where: { email: data.email.toLowerCase().trim() },
+      where: { email: email.toLowerCase() },
     });
 
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
     const user = this.userRepository.create({
-      email: data.email.toLowerCase().trim(),
-      passwordHash: data.passwordHash,
-      name: data.name.trim(),
-      dailyGoal: data.dailyGoal ?? 10,
-      timezone: data.timezone ?? 'UTC',
+      email: email.toLowerCase(),
+      passwordHash,
+      name,
+      dailyGoal: dailyGoal || 10,
+      timezone: timezone || 'UTC',
     });
 
     return await this.userRepository.save(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository
-      .createQueryBuilder('user')
-      .addSelect('user.passwordHash')
-      .where('LOWER(user.email) = LOWER(:email)', { email: email.trim() })
-      .getOne();
+    return await this.userRepository.findOne({
+      where: { email: email.toLowerCase() },
+    });
   }
 
-  async findById(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async findById(id: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async updateProfile(
+    userId: string,
+    updateDto: UpdateProfileDto,
+  ): Promise<UserDto> {
+    const user = await this.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
-  }
-
-  async update(id: string, updateDto: UpdateUserDto): Promise<User> {
-    const user = await this.findById(id);
 
     if (updateDto.name !== undefined) {
-      user.name = updateDto.name.trim();
+      user.name = updateDto.name;
     }
     if (updateDto.dailyGoal !== undefined) {
       user.dailyGoal = updateDto.dailyGoal;
@@ -71,7 +74,36 @@ export class UsersService {
       user.timezone = updateDto.timezone;
     }
 
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    return this.toUserDto(savedUser);
+  }
+
+  async updatePassword(
+    userId: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<{ message: string }> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      updatePasswordDto.currentPassword,
+      user.passwordHash,
+    );
+
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    const saltRounds = 10;
+    user.passwordHash = await bcrypt.hash(
+      updatePasswordDto.newPassword,
+      saltRounds,
+    );
+
+    await this.userRepository.save(user);
+    return { message: 'Password updated successfully' };
   }
 
   toUserDto(user: User): UserDto {
