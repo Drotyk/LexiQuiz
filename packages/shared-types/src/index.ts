@@ -16,6 +16,13 @@ export enum LearningStatus {
   MASTERED = 'mastered'
 }
 
+export enum LearningRating {
+  AGAIN = 'again',
+  HARD = 'hard',
+  GOOD = 'good',
+  EASY = 'easy'
+}
+
 export enum QuizSessionStatus {
   ACTIVE = 'active',
   COMPLETED = 'completed',
@@ -105,4 +112,23 @@ export interface BulkPreviewResultDto {
   valid: BulkPreviewValidItem[];
   invalid: BulkPreviewInvalidItem[];
   duplicates: BulkPreviewDuplicateItem[];
+}
+
+export interface LearningProgressDto {
+  id: string;
+  userId: string;
+  wordId: string;
+  status: LearningStatus;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  consecutiveCorrect: number;
+  easeFactor: number;
+  repetitionInterval: number;
+  lastReviewedAt: Date | null;
+  nextReviewAt: Date | null;
+}
+
+export interface StudyCardDto {
+  word: WordDto;
+  progress: LearningProgressDto | null;
 }
