@@ -151,8 +151,8 @@ export interface QuizQuestionDto {
   wordId: string;
   questionType: QuestionType;
   prompt: string;
-  options?: string[]; // Used for multiple_choice
-  displayPair?: { term: string; translation: string }; // Used for true_false
+  options?: string[];
+  displayPair?: { term: string; translation: string };
 }
 
 export interface QuizAnswerResultDto {
@@ -176,4 +176,45 @@ export interface QuizSessionResultDto {
   session: QuizSessionDto;
   accuracyPercent: number;
   answers: QuizAnswerDetailDto[];
+}
+
+export interface StatisticsOverviewDto {
+  totalWords: number;
+  newWords: number;
+  learningWords: number;
+  reviewingWords: number;
+  masteredWords: number;
+  dueTodayCount: number;
+  dailyGoal: number;
+  currentStreak: number;
+  accuracy7Days: number;
+  totalQuizzesCompleted: number;
+  avgResponseTimeMs: number;
+}
+
+export interface DifficultWordDto {
+  wordId: string;
+  term: string;
+  translation: string;
+  setName: string;
+  incorrectAnswers: number;
+  correctAnswers: number;
+  accuracyPercent: number;
+}
+
+export interface SetStatisticsDto {
+  setId: string;
+  title: string;
+  totalWords: number;
+  newWords: number;
+  learningWords: number;
+  masteredWords: number;
+  accuracyPercent: number;
+}
+
+export interface DailyActivityItemDto {
+  date: string; // YYYY-MM-DD
+  count: number;
+  correct: number;
+  incorrect: number;
 }
