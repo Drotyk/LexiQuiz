@@ -7,8 +7,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test-and-build:
-    name: Build, Lint & Test
+  ci:
+    name: Continuous Integration Checks
     runs-on: ubuntu-latest
 
     services:
@@ -59,11 +59,14 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run Unit Tests
-        run: npm run test
+      - name: Run Backend Unit Tests
+        run: npm run test --workspace=apps/backend
 
-      - name: Run E2E Integration Tests
+      - name: Run Backend E2E Integration Tests
         run: npm run test:e2e --workspace=apps/backend
+
+      - name: Run Frontend Unit Tests
+        run: npm run test --workspace=apps/frontend
 
       - name: Run Production Build
         run: npm run build

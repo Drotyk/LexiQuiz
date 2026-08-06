@@ -1,0 +1,45 @@
+name: 🐛 Bug Report
+description: Створити звіт про виявлену помилку в застосунку
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Дякуємо за допомогу в покращенні LexiQuiz!
+  - type: textarea
+    id: description
+    attributes:
+      label: Опис помилки
+      description: Чіткий та стислий опис того, що сталося.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Кроки для відтворення
+      description: Опишіть послідовність дій для відтворення помилки.
+      placeholder: |
+        1. Перейти на '...'
+        2. Натиснути на '...'
+        3. Побачити помилку
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Очікувана поведінка
+      description: Опишіть, як система мала працювати натомість.
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Компонент системи
+      options:
+        - Frontend (Next.js)
+        - Backend (NestJS)
+        - Database (PostgreSQL/TypeORM)
+        - Auth & Session
+        - Spaced Repetition / Quizzes
+    validations:
+      required: true

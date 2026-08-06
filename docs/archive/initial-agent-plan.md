@@ -1,3 +1,9 @@
+# Initial Agent Plan Archive
+
+> **Note**: This document is an archived transcript of the initial AI agent prompt/plan used during the early bootstrapping phase of WordForge (LexiQuiz). For active project documentation and future plans, please refer to [docs/roadmap.md](file:///home/palamar/Documents/Project/LexiQuiz/docs/roadmap.md) and [docs/architecture.md](file:///home/palamar/Documents/Project/LexiQuiz/docs/architecture.md).
+
+---
+
 # Завдання для агента: покрокове створення вебзастосунку для вивчення власних слів
 
 Ти — досвідчений full-stack розробник і software architect. Потрібно спроєктувати та покроково реалізувати вебзастосунок, у якому користувач додає власні слова, вивчає їх за допомогою карток і квізів, а система автоматично планує повторення.

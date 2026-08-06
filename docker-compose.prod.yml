@@ -1,0 +1,92 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lexiquiz-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-wordforge}
+      POSTGRES_USER: ${DATABASE_USER:-wordforge_user}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-wordforge_pass}
+    # No exposed ports to host for security
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    networks:
+      - lexiquiz-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-wordforge_user} -d ${DATABASE_NAME:-wordforge}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: lexiquiz-migrations-prod
+    command: npm run migration:run --workspace=apps/backend
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-wordforge}
+      DATABASE_USER: ${DATABASE_USER:-wordforge_user}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-wordforge_pass}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+    networks:
+      - lexiquiz-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: lexiquiz-backend-prod
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-wordforge}
+      DATABASE_USER: ${DATABASE_USER:-wordforge_user}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-wordforge_pass}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+    ports:
+      - "3001:3001"
+    networks:
+      - lexiquiz-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+    container_name: lexiquiz-frontend-prod
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    networks:
+      - lexiquiz-network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_prod_data:
+
+networks:
+  lexiquiz-network:
+    driver: bridge

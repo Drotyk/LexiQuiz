@@ -1,0 +1,24 @@
+name: ✨ Feature Request
+description: Запропонувати нову функцію або покращення
+title: "[FEAT]: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Проблема або потреба
+      description: Чи пов'язана ця пропозиція з якоюсь проблемою? Опишіть її.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Пропоноване рішення
+      description: Опишіть, як саме має працювати нова можливість.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Альтернативні варіанти
+      description: Опишіть будь-які альтернативні рішення, які ви розглядали.
