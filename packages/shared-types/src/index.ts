@@ -65,3 +65,44 @@ export interface PaginatedWordSetsDto {
   limit: number;
   totalPages: number;
 }
+
+export interface WordDto {
+  id: string;
+  setId: string;
+  term: string;
+  translation: string;
+  transcription: string | null;
+  example: string | null;
+  note: string | null;
+  partOfSpeech: string | null;
+  difficulty: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface BulkPreviewValidItem {
+  term: string;
+  translation: string;
+  transcription?: string;
+  example?: string;
+  note?: string;
+}
+
+export interface BulkPreviewInvalidItem {
+  line: number;
+  value: string;
+  reason: string;
+}
+
+export interface BulkPreviewDuplicateItem {
+  line: number;
+  term: string;
+  translation: string;
+  reason: string;
+}
+
+export interface BulkPreviewResultDto {
+  valid: BulkPreviewValidItem[];
+  invalid: BulkPreviewInvalidItem[];
+  duplicates: BulkPreviewDuplicateItem[];
+}

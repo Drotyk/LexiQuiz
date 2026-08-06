@@ -1,0 +1,10 @@
+import { IsArray, IsUUID, ArrayMinSize } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class BulkDeleteWordsDto {
+  @ApiProperty({ example: ['uuid-1', 'uuid-2'] })
+  @IsArray()
+  @IsUUID('4', { each: true })
+  @ArrayMinSize(1)
+  wordIds: string[];
+}
