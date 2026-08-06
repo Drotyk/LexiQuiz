@@ -8,6 +8,7 @@ import { Repository, LessThanOrEqual } from 'typeorm';
 import { LearningProgress } from './entities/learning-progress.entity';
 import { Word } from '../words/entities/word.entity';
 import { WordSet } from '../word-sets/entities/word-set.entity';
+import { SpacedRepetitionService } from './spaced-repetition.service';
 import {
   LearningRating,
   LearningStatus,
@@ -24,6 +25,7 @@ export class LearningService {
     private readonly wordRepository: Repository<Word>,
     @InjectRepository(WordSet)
     private readonly wordSetRepository: Repository<WordSet>,
+    private readonly spacedRepetitionService: SpacedRepetitionService,
   ) {}
 
   async getCardsForSet(userId: string, setId: string): Promise<StudyCardDto[]> {
@@ -54,7 +56,6 @@ export class LearningService {
     const wordIds = words.map((w) => w.id);
 
     const progressMap = new Map<string, LearningProgress>();
-    // Fetch all progress for user for these words
     const userProgress = await this.progressRepository
       .createQueryBuilder('lp')
       .where('lp.userId = :userId AND lp.wordId IN (:...wordIds)', {
@@ -88,6 +89,7 @@ export class LearningService {
   async getDueWords(userId: string, limit = 20): Promise<StudyCardDto[]> {
     const now = new Date();
 
+    // 1. Get words that are due for review (nextReviewAt <= NOW())
     const dueProgress = await this.progressRepository.find({
       where: {
         userId,
@@ -97,7 +99,7 @@ export class LearningService {
       take: limit,
     });
 
-    return dueProgress
+    const dueCards: StudyCardDto[] = dueProgress
       .filter((lp) => lp.word)
       .map((lp) => ({
         word: {
@@ -115,6 +117,59 @@ export class LearningService {
         },
         progress: this.toProgressDto(lp),
       }));
+
+    // 2. If due words are less than limit, include new words without progress
+    if (dueCards.length < limit) {
+      const remainingLimit = limit - dueCards.length;
+
+      const existingProgressWordIds = (
+        await this.progressRepository.find({
+          where: { userId },
+          select: ['wordId'],
+        })
+      ).map((p) => p.wordId);
+
+      const userWordSets = await this.wordSetRepository.find({
+        where: { userId },
+        select: ['id'],
+      });
+
+      if (userWordSets.length > 0) {
+        const userSetIds = userWordSets.map((s) => s.id);
+        const queryBuilder = this.wordRepository
+          .createQueryBuilder('word')
+          .where('word.setId IN (:...userSetIds)', { userSetIds });
+
+        if (existingProgressWordIds.length > 0) {
+          queryBuilder.andWhere('word.id NOT IN (:...existingProgressWordIds)', {
+            existingProgressWordIds,
+          });
+        }
+
+        const newWords = await queryBuilder.take(remainingLimit).getMany();
+
+        newWords.forEach((word) => {
+          dueCards.push({
+            word: {
+              id: word.id,
+              setId: word.setId,
+              term: word.term,
+              translation: word.translation,
+              transcription: word.transcription,
+              example: word.example,
+              note: word.note,
+              partOfSpeech: word.partOfSpeech,
+              difficulty: word.difficulty,
+              createdAt: word.createdAt,
+              updatedAt: word.updatedAt,
+            },
+            progress: null,
+          });
+        });
+      }
+    }
+
+    return dueCards;
   }
 
   async reviewWord(
@@ -149,55 +204,29 @@ export class LearningService {
     const now = new Date();
     progress.lastReviewedAt = now;
 
-    let ease = Number(progress.easeFactor) || 2.5;
-    let interval = progress.repetitionInterval || 0;
-    let consecutive = progress.consecutiveCorrect || 0;
-
-    switch (rating) {
-      case LearningRating.AGAIN:
-        consecutive = 0;
-        progress.incorrectAnswers += 1;
-        progress.status = LearningStatus.LEARNING;
-        interval = 10; // 10 minutes
-        ease = Math.max(1.3, ease - 0.2);
-        break;
-
-      case LearningRating.HARD:
-        progress.correctAnswers += 1;
-        consecutive += 1;
-        progress.status = LearningStatus.LEARNING;
-        interval = Math.max(1, Math.round(interval * 1.2)) || 1440; // 1 day in minutes
-        ease = Math.max(1.3, ease - 0.15);
-        break;
-
-      case LearningRating.GOOD:
-        progress.correctAnswers += 1;
-        consecutive += 1;
-        progress.status =
-          consecutive >= 3 ? LearningStatus.REVIEWING : LearningStatus.LEARNING;
-        if (consecutive === 1) interval = 1440; // 1 day
-        else if (consecutive === 2) interval = 4320; // 3 days
-        else interval = Math.round(interval * ease);
-        break;
-
-      case LearningRating.EASY:
-        progress.correctAnswers += 1;
-        consecutive += 1;
-        progress.status =
-          consecutive >= 2 ? LearningStatus.MASTERED : LearningStatus.REVIEWING;
-        ease += 0.15;
-        if (consecutive === 1) interval = 5760; // 4 days
-        else interval = Math.round(interval * ease * 1.3);
-        break;
+    if (rating === LearningRating.AGAIN) {
+      progress.incorrectAnswers += 1;
+    } else {
+      progress.correctAnswers += 1;
     }
 
-    progress.easeFactor = Number(ease.toFixed(2));
-    progress.repetitionInterval = interval;
-    progress.consecutiveCorrect = consecutive;
+    // Perform SM-2 calculation using SpacedRepetitionService
+    const calculation = this.spacedRepetitionService.calculateNextReview(
+      {
+        status: progress.status,
+        consecutiveCorrect: progress.consecutiveCorrect,
+        easeFactor: Number(progress.easeFactor),
+        repetitionInterval: progress.repetitionInterval,
+      },
+      rating,
+      now,
+    );
 
-    // Calculate nextReviewAt
-    const nextReview = new Date(now.getTime() + interval * 60 * 1000);
-    progress.nextReviewAt = nextReview;
+    progress.status = calculation.status;
+    progress.consecutiveCorrect = calculation.consecutiveCorrect;
+    progress.easeFactor = calculation.easeFactor;
+    progress.repetitionInterval = calculation.repetitionInterval;
+    progress.nextReviewAt = calculation.nextReviewAt;
 
     const savedProgress = await this.progressRepository.save(progress);
     return this.toProgressDto(savedProgress);

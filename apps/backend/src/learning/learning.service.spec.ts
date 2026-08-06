@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { LearningService } from './learning.service';
+import { SpacedRepetitionService } from './spaced-repetition.service';
 import { LearningProgress } from './entities/learning-progress.entity';
 import { Word } from '../words/entities/word.entity';
 import { WordSet } from '../word-sets/entities/word-set.entity';
@@ -79,6 +80,7 @@ describe('LearningService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LearningService,
+        SpacedRepetitionService,
         { provide: getRepositoryToken(LearningProgress), useValue: mockProgressRepo },
         { provide: getRepositoryToken(Word), useValue: mockWordRepo },
         { provide: getRepositoryToken(WordSet), useValue: mockWordSetRepo },
