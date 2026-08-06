@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { LearningService } from './learning.service';
 import { SpacedRepetitionService } from './spaced-repetition.service';
+import { DailyActivityService } from '../daily-activity/daily-activity.service';
 import { LearningProgress } from './entities/learning-progress.entity';
 import { Word } from '../words/entities/word.entity';
 import { WordSet } from '../word-sets/entities/word-set.entity';
@@ -76,11 +77,16 @@ describe('LearningService', () => {
     findOne: jest.fn().mockResolvedValue(mockWordSet),
   };
 
+  const mockDailyActivityService = {
+    recordActivity: jest.fn().mockResolvedValue({}),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LearningService,
         SpacedRepetitionService,
+        { provide: DailyActivityService, useValue: mockDailyActivityService },
         { provide: getRepositoryToken(LearningProgress), useValue: mockProgressRepo },
         { provide: getRepositoryToken(Word), useValue: mockWordRepo },
         { provide: getRepositoryToken(WordSet), useValue: mockWordSetRepo },

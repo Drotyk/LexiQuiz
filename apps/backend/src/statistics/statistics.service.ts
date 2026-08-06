@@ -11,6 +11,7 @@ import { LearningProgress } from '../learning/entities/learning-progress.entity'
 import { QuizSession } from '../quizzes/entities/quiz-session.entity';
 import { QuizAnswer } from '../quizzes/entities/quiz-answer.entity';
 import { User } from '../users/entities/user.entity';
+import { DailyActivityService } from '../daily-activity/daily-activity.service';
 import {
   StatisticsOverviewDto,
   DifficultWordDto,
@@ -35,6 +36,7 @@ export class StatisticsService {
     private readonly answerRepository: Repository<QuizAnswer>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly dailyActivityService: DailyActivityService,
   ) {}
 
   async getOverview(userId: string): Promise<StatisticsOverviewDto> {
@@ -115,6 +117,20 @@ export class StatisticsService {
       where: { userId, status: QuizSessionStatus.COMPLETED },
     });
 
+    // 6. Real streak & daily goal calculation
+    let streakInfo = {
+      currentStreak: 0,
+      longestStreak: 0,
+      todayReviewedWords: 0,
+      goalCompletedToday: false,
+    };
+
+    try {
+      streakInfo = await this.dailyActivityService.getStreakInfo(userId);
+    } catch {
+      // Handled
+    }
+
     return {
       totalWords,
       newWords,
@@ -123,7 +139,10 @@ export class StatisticsService {
       masteredWords,
       dueTodayCount,
       dailyGoal: user.dailyGoal || 10,
-      currentStreak: 1, // Detailed streak handled in Phase 9
+      currentStreak: streakInfo.currentStreak,
+      longestStreak: streakInfo.longestStreak,
+      todayReviewedWords: streakInfo.todayReviewedWords,
+      goalCompletedToday: streakInfo.goalCompletedToday,
       accuracy7Days,
       totalQuizzesCompleted,
       avgResponseTimeMs,

@@ -9,6 +9,7 @@ import { WordsModule } from './words/words.module';
 import { LearningModule } from './learning/learning.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { DailyActivityModule } from './daily-activity/daily-activity.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { StatisticsModule } from './statistics/statistics.module';
     LearningModule,
     QuizzesModule,
     StatisticsModule,
+    DailyActivityModule,
   ],
 })
 export class AppModule {}

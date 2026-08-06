@@ -94,16 +94,44 @@ export default function HomePage() {
     <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
       {/* Welcome Banner & Quick Start */}
       <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/60 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-sky-400">
-            Welcome Back
-          </span>
+        <div className="space-y-3">
+          <div className="flex items-center space-x-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-sky-400">
+              Welcome Back
+            </span>
+            {stats?.currentStreak ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-1">
+                🔥 {stats.currentStreak} Day Streak!
+              </span>
+            ) : null}
+          </div>
+
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
             Hello, {user.name}! 👋
           </h1>
-          <p className="text-slate-300 text-sm max-w-md">
-            You have <strong className="text-amber-400 font-bold">{stats?.dueTodayCount || 0}</strong> words ready for repetition today.
-          </p>
+
+          {/* Daily Goal Progress Bar */}
+          <div className="space-y-1.5 max-w-sm">
+            <div className="flex justify-between text-xs font-medium">
+              <span className="text-slate-300">Daily Goal Progress</span>
+              <span className="text-amber-400 font-bold">
+                {stats?.todayReviewedWords || 0} / {stats?.dailyGoal || 10} words
+              </span>
+            </div>
+            <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div
+                className="bg-gradient-to-r from-amber-500 to-emerald-400 h-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(
+                    100,
+                    Math.round(
+                      ((stats?.todayReviewedWords || 0) / (stats?.dailyGoal || 10)) * 100,
+                    ),
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3">

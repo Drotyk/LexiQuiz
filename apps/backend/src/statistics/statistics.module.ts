@@ -8,6 +8,7 @@ import { QuizAnswer } from '../quizzes/entities/quiz-answer.entity';
 import { User } from '../users/entities/user.entity';
 import { StatisticsService } from './statistics.service';
 import { StatisticsController } from './statistics.controller';
+import { DailyActivityModule } from '../daily-activity/daily-activity.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { StatisticsController } from './statistics.controller';
       QuizAnswer,
       User,
     ]),
+    DailyActivityModule,
   ],
   controllers: [StatisticsController],
   providers: [StatisticsService],

@@ -9,6 +9,7 @@ import { LearningProgress } from './entities/learning-progress.entity';
 import { Word } from '../words/entities/word.entity';
 import { WordSet } from '../word-sets/entities/word-set.entity';
 import { SpacedRepetitionService } from './spaced-repetition.service';
+import { DailyActivityService } from '../daily-activity/daily-activity.service';
 import {
   LearningRating,
   LearningStatus,
@@ -26,6 +27,7 @@ export class LearningService {
     @InjectRepository(WordSet)
     private readonly wordSetRepository: Repository<WordSet>,
     private readonly spacedRepetitionService: SpacedRepetitionService,
+    private readonly dailyActivityService: DailyActivityService,
   ) {}
 
   async getCardsForSet(userId: string, setId: string): Promise<StudyCardDto[]> {
@@ -229,6 +231,17 @@ export class LearningService {
     progress.nextReviewAt = calculation.nextReviewAt;
 
     const savedProgress = await this.progressRepository.save(progress);
+
+    // Record daily activity tracking
+    try {
+      await this.dailyActivityService.recordActivity(
+        userId,
+        rating !== LearningRating.AGAIN,
+      );
+    } catch {
+      // Ignore background activity log error
+    }
+
     return this.toProgressDto(savedProgress);
   }
 

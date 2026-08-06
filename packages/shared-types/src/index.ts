@@ -187,6 +187,9 @@ export interface StatisticsOverviewDto {
   dueTodayCount: number;
   dailyGoal: number;
   currentStreak: number;
+  longestStreak: number;
+  todayReviewedWords: number;
+  goalCompletedToday: boolean;
   accuracy7Days: number;
   totalQuizzesCompleted: number;
   avgResponseTimeMs: number;
@@ -213,8 +216,27 @@ export interface SetStatisticsDto {
 }
 
 export interface DailyActivityItemDto {
-  date: string; // YYYY-MM-DD
+  date: string;
   count: number;
   correct: number;
   incorrect: number;
+}
+
+export interface DailyActivityDto {
+  id: string;
+  userId: string;
+  date: string; // YYYY-MM-DD in user's timezone
+  reviewedWords: number;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  completedGoal: boolean;
+}
+
+export interface StreakInfoDto {
+  currentStreak: number;
+  longestStreak: number;
+  todayReviewedWords: number;
+  dailyGoal: number;
+  goalCompletedToday: boolean;
+  history: DailyActivityDto[];
 }

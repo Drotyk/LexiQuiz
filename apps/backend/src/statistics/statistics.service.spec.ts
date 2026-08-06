@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { StatisticsService } from './statistics.service';
+import { DailyActivityService } from '../daily-activity/daily-activity.service';
+import { DailyActivity } from '../daily-activity/entities/daily-activity.entity';
 import { Word } from '../words/entities/word.entity';
 import { WordSet } from '../word-sets/entities/word-set.entity';
 import { LearningProgress } from '../learning/entities/learning-progress.entity';
@@ -70,16 +72,25 @@ describe('StatisticsService', () => {
     }),
   };
 
+  const mockDailyActivityRepo = {
+    find: jest.fn().mockResolvedValue([]),
+    findOne: jest.fn().mockResolvedValue(null),
+    create: jest.fn().mockReturnValue({}),
+    save: jest.fn().mockResolvedValue({}),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StatisticsService,
+        DailyActivityService,
         { provide: getRepositoryToken(User), useValue: mockUserRepo },
         { provide: getRepositoryToken(WordSet), useValue: mockWordSetRepo },
         { provide: getRepositoryToken(Word), useValue: mockWordRepo },
         { provide: getRepositoryToken(LearningProgress), useValue: mockProgressRepo },
         { provide: getRepositoryToken(QuizSession), useValue: mockSessionRepo },
         { provide: getRepositoryToken(QuizAnswer), useValue: mockAnswerRepo },
+        { provide: getRepositoryToken(DailyActivity), useValue: mockDailyActivityRepo },
       ],
     }).compile();
 
