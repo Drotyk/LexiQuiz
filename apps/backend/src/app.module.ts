@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { WordSetsModule } from './word-sets/word-sets.module';
 import { WordsModule } from './words/words.module';
 import { LearningModule } from './learning/learning.module';
+import { QuizzesModule } from './quizzes/quizzes.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LearningModule } from './learning/learning.module';
     WordSetsModule,
     WordsModule,
     LearningModule,
+    QuizzesModule,
   ],
 })
 export class AppModule {}

@@ -132,3 +132,48 @@ export interface StudyCardDto {
   word: WordDto;
   progress: LearningProgressDto | null;
 }
+
+export interface QuizSessionDto {
+  id: string;
+  userId: string;
+  setId: string;
+  mode: string;
+  status: QuizSessionStatus;
+  totalQuestions: number;
+  correctAnswers: number;
+  startedAt: Date;
+  completedAt: Date | null;
+}
+
+export interface QuizQuestionDto {
+  questionIndex: number;
+  totalQuestions: number;
+  wordId: string;
+  questionType: QuestionType;
+  prompt: string;
+  options?: string[]; // Used for multiple_choice
+  displayPair?: { term: string; translation: string }; // Used for true_false
+}
+
+export interface QuizAnswerResultDto {
+  isCorrect: boolean;
+  correctAnswer: string;
+  userAnswer: string;
+}
+
+export interface QuizAnswerDetailDto {
+  id: string;
+  wordId: string;
+  term: string;
+  questionType: string;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  responseTimeMs: number;
+}
+
+export interface QuizSessionResultDto {
+  session: QuizSessionDto;
+  accuracyPercent: number;
+  answers: QuizAnswerDetailDto[];
+}
