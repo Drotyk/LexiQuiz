@@ -23,6 +23,11 @@ describe('UsersService', () => {
     findOne: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
+    createQueryBuilder: jest.fn().mockReturnValue({
+      addSelect: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      getOne: jest.fn().mockImplementation(() => Promise.resolve(mockUser)),
+    }),
   };
 
   beforeEach(async () => {

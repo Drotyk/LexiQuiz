@@ -4,8 +4,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { UserSession } from './entities/user-session.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../users/entities/user.entity';
@@ -23,9 +26,15 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    @InjectRepository(UserSession)
+    private readonly sessionRepository: Repository<UserSession>,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<TokensAndUser> {
+  async register(
+    registerDto: RegisterDto,
+    userAgent?: string,
+    ipAddress?: string,
+  ): Promise<TokensAndUser> {
     const user = await this.usersService.create({
       email: registerDto.email,
       password: registerDto.password,
@@ -34,7 +43,7 @@ export class AuthService {
       timezone: registerDto.timezone,
     });
 
-    const tokens = await this.generateTokens(user);
+    const tokens = await this.generateTokens(user, userAgent, ipAddress);
 
     return {
       ...tokens,
@@ -42,7 +51,11 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDto): Promise<TokensAndUser> {
+  async login(
+    loginDto: LoginDto,
+    userAgent?: string,
+    ipAddress?: string,
+  ): Promise<TokensAndUser> {
     const user = await this.usersService.findByEmail(loginDto.email);
 
     if (!user) {
@@ -58,7 +71,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const tokens = await this.generateTokens(user);
+    const tokens = await this.generateTokens(user, userAgent, ipAddress);
 
     return {
       ...tokens,
@@ -66,49 +79,114 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(refreshToken: string): Promise<TokensAndUser> {
+  async refreshTokens(
+    refreshToken: string,
+    userAgent?: string,
+    ipAddress?: string,
+  ): Promise<TokensAndUser> {
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token is required');
     }
 
-    try {
-      const refreshSecret = this.configService.get<string>(
-        'JWT_REFRESH_SECRET',
-        'wordforge_jwt_refresh_secret_super_secure_key_67890',
-      );
+    const refreshSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
+    if (!refreshSecret) {
+      throw new Error('JWT_REFRESH_SECRET environment variable is missing');
+    }
 
-      const payload = await this.jwtService.verifyAsync(refreshToken, {
+    let payload: any;
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
         secret: refreshSecret,
       });
-
-      const user = await this.usersService.findById(payload.sub);
-      const tokens = await this.generateTokens(user);
-
-      return {
-        ...tokens,
-        user: this.usersService.toUserDto(user),
-      };
     } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
+
+    const user = await this.usersService.findById(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Verify refresh token against active stored sessions in database
+    const activeSessions = await this.sessionRepository.find({
+      where: {
+        userId: user.id,
+        isRevoked: false,
+        expiresAt: MoreThan(new Date()),
+      },
+    });
+
+    let matchedSession: UserSession | null = null;
+    for (const session of activeSessions) {
+      const isMatch = await bcrypt.compare(
+        refreshToken,
+        session.refreshTokenHash,
+      );
+      if (isMatch) {
+        matchedSession = session;
+        break;
+      }
+    }
+
+    if (!matchedSession) {
+      throw new UnauthorizedException('Session is invalid or has been revoked');
+    }
+
+    // Revoke old session during rotation
+    matchedSession.isRevoked = true;
+    await this.sessionRepository.save(matchedSession);
+
+    // Issue new token pair and create new session
+    const tokens = await this.generateTokens(user, userAgent, ipAddress);
+
+    return {
+      ...tokens,
+      user: this.usersService.toUserDto(user),
+    };
   }
 
-  private async generateTokens(user: User) {
+  async logout(userId: string, refreshToken?: string): Promise<{ message: string }> {
+    if (refreshToken) {
+      const activeSessions = await this.sessionRepository.find({
+        where: { userId, isRevoked: false },
+      });
+
+      for (const session of activeSessions) {
+        const isMatch = await bcrypt.compare(refreshToken, session.refreshTokenHash);
+        if (isMatch) {
+          session.isRevoked = true;
+          await this.sessionRepository.save(session);
+          break;
+        }
+      }
+    } else {
+      // Revoke all active sessions for user
+      await this.sessionRepository.update({ userId }, { isRevoked: true });
+    }
+
+    return { message: 'Logged out successfully' };
+  }
+
+  private async generateTokens(
+    user: User,
+    userAgent?: string,
+    ipAddress?: string,
+  ) {
     const payload = { sub: user.id, email: user.email };
 
-    const accessSecret = this.configService.get<string>(
-      'JWT_ACCESS_SECRET',
-      'wordforge_jwt_access_secret_super_secure_key_12345',
-    );
+    const accessSecret = this.configService.get<string>('JWT_ACCESS_SECRET');
+    if (!accessSecret) {
+      throw new Error('JWT_ACCESS_SECRET environment variable is missing');
+    }
     const accessExpiresIn = this.configService.get<string>(
       'JWT_ACCESS_EXPIRES_IN',
       '15m',
     );
 
-    const refreshSecret = this.configService.get<string>(
-      'JWT_REFRESH_SECRET',
-      'wordforge_jwt_refresh_secret_super_secure_key_67890',
-    );
+    const refreshSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
+    if (!refreshSecret) {
+      throw new Error('JWT_REFRESH_SECRET environment variable is missing');
+    }
     const refreshExpiresIn = this.configService.get<string>(
       'JWT_REFRESH_EXPIRES_IN',
       '7d',
@@ -124,6 +202,24 @@ export class AuthService {
         expiresIn: refreshExpiresIn,
       }),
     ]);
+
+    // Store hashed refresh token in UserSession table
+    const saltRounds = 10;
+    const refreshTokenHash = await bcrypt.hash(refreshToken, saltRounds);
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiration
+
+    const session = this.sessionRepository.create({
+      userId: user.id,
+      refreshTokenHash,
+      userAgent: userAgent || null,
+      ipAddress: ipAddress || null,
+      isRevoked: false,
+      expiresAt,
+    });
+
+    await this.sessionRepository.save(session);
 
     return { accessToken, refreshToken };
   }

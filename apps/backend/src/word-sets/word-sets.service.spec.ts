@@ -35,6 +35,7 @@ describe('WordSetsService', () => {
     save: jest.fn().mockResolvedValue(mockWordSet),
     findOne: jest.fn(),
     remove: jest.fn().mockResolvedValue(mockWordSet),
+    query: jest.fn().mockResolvedValue([{ wordCount: '0', masteredCount: '0' }]),
     createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
   };
 

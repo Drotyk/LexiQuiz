@@ -46,13 +46,19 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({
-      where: { email: email.toLowerCase() },
-    });
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('LOWER(user.email) = :email', { email: email.toLowerCase() })
+      .getOne();
   }
 
   async findById(id: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { id } });
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.id = :id', { id })
+      .getOne();
   }
 
   async updateProfile(

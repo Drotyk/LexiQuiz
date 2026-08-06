@@ -31,14 +31,14 @@ export class WordsParserService {
         return;
       }
 
-      // Find separator: em-dash, hyphen, colon, semicolon, or tab
+      // Find separator according to strict priority
       const separatorMatch = this.findSeparator(trimmedLine);
 
       if (!separatorMatch) {
         invalid.push({
           line: lineNumber,
           value: trimmedLine,
-          reason: 'Separator not found (expected —, -, :, ; or Tab)',
+          reason: 'Separator not found (expected —, –, -, :, ; or Tab)',
         });
         return;
       }
@@ -93,24 +93,32 @@ export class WordsParserService {
     translation: string;
     rest?: string;
   } | null {
-    // List of separators ordered by preference: tab, em-dash, colon, semicolon, hyphen
-    const separators = ['\t', '—', ':', ';', ' - '];
+    // List of separators ordered by strict preference:
+    // 1. Tab
+    // 2. Em-dash (—)
+    // 3. En-dash (–)
+    // 4. Colon (:)
+    // 5. Semicolon (;)
+    // 6. Hyphen surrounded by spaces (" - ")
+    const preferredSeparators = ['\t', '—', '–', ':', ';', ' - '];
 
-    for (const sep of separators) {
+    for (const sep of preferredSeparators) {
       if (line.includes(sep)) {
         const parts = line.split(sep);
         const term = parts[0].trim();
-        const translation = parts.slice(1).join(sep).trim();
-        return { term, translation };
+        const translation = parts[1] ? parts[1].trim() : '';
+        const rest = parts.length > 2 ? parts.slice(2).join(sep).trim() : undefined;
+        return { term, translation, rest };
       }
     }
 
-    // Fallback check for single hyphen if surrounded by spaces or standard hyphen
-    const hyphenIdx = line.indexOf('-');
-    if (hyphenIdx > 0 && hyphenIdx < line.length - 1) {
-      const term = line.substring(0, hyphenIdx).trim();
-      const translation = line.substring(hyphenIdx + 1).trim();
-      return { term, translation };
+    // Fallback: single hyphen surrounded by whitespace or at boundary
+    const hyphenSpaceMatch = line.match(/^(.+?)\s+-\s+(.+)$/);
+    if (hyphenSpaceMatch) {
+      return {
+        term: hyphenSpaceMatch[1].trim(),
+        translation: hyphenSpaceMatch[2].trim(),
+      };
     }
 
     return null;

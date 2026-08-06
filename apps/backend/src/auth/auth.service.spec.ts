@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
+import { UserSession } from './entities/user-session.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
@@ -41,7 +43,18 @@ describe('AuthService', () => {
   };
 
   const mockConfigService = {
-    get: jest.fn((key: string, defaultValue: string) => defaultValue),
+    get: jest.fn((key: string) => {
+      if (key === 'JWT_ACCESS_SECRET') return 'test_access_secret_123';
+      if (key === 'JWT_REFRESH_SECRET') return 'test_refresh_secret_123';
+      return '15m';
+    }),
+  };
+
+  const mockSessionRepo = {
+    create: jest.fn().mockReturnValue({}),
+    save: jest.fn().mockResolvedValue({}),
+    find: jest.fn().mockResolvedValue([]),
+    update: jest.fn().mockResolvedValue({}),
   };
 
   beforeEach(async () => {
@@ -53,6 +66,7 @@ describe('AuthService', () => {
         { provide: UsersService, useValue: mockUsersService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: ConfigService, useValue: mockConfigService },
+        { provide: getRepositoryToken(UserSession), useValue: mockSessionRepo },
       ],
     }).compile();
 

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -17,19 +18,26 @@ import { AuthResponse } from '@wordforge/shared-types';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user account' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  @ApiResponse({ status: 49, description: 'Email already exists' })
+  @ApiResponse({ status: 409, description: 'Email already exists' })
   async register(
     @Body() registerDto: RegisterDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthResponse> {
+    const userAgent = request.headers['user-agent'];
+    const ipAddress = request.ip;
+
     const { accessToken, refreshToken, user } =
-      await this.authService.register(registerDto);
+      await this.authService.register(registerDto, userAgent, ipAddress);
 
     this.setRefreshTokenCookie(response, refreshToken);
 
@@ -43,10 +51,14 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(
     @Body() loginDto: LoginDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthResponse> {
+    const userAgent = request.headers['user-agent'];
+    const ipAddress = request.ip;
+
     const { accessToken, refreshToken, user } =
-      await this.authService.login(loginDto);
+      await this.authService.login(loginDto, userAgent, ipAddress);
 
     this.setRefreshTokenCookie(response, refreshToken);
 
@@ -61,12 +73,13 @@ export class AuthController {
   async refresh(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-    @Body('refreshToken') bodyRefreshToken?: string,
   ): Promise<AuthResponse> {
-    const refreshToken = request.cookies?.refreshToken || bodyRefreshToken;
+    const refreshToken = request.cookies?.refreshToken;
+    const userAgent = request.headers['user-agent'];
+    const ipAddress = request.ip;
 
     const { accessToken, refreshToken: newRefreshToken, user } =
-      await this.authService.refreshTokens(refreshToken);
+      await this.authService.refreshTokens(refreshToken, userAgent, ipAddress);
 
     this.setRefreshTokenCookie(response, newRefreshToken);
 
@@ -77,23 +90,32 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log out user and clear refresh token cookie' })
   @ApiResponse({ status: 200, description: 'Logged out successfully' })
-  async logout(@Res({ passthrough: true }) response: Response): Promise<{ message: string }> {
+  async logout(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<{ message: string }> {
+    const refreshToken = request.cookies?.refreshToken;
+
+    await this.authService.logout('', refreshToken);
+
     response.clearCookie('refreshToken', {
       httpOnly: true,
       sameSite: 'lax',
-      path: '/auth/refresh',
+      path: '/',
     });
 
     return { message: 'Successfully logged out' };
   }
 
   private setRefreshTokenCookie(response: Response, refreshToken: string) {
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
+
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: false, // Set to true in production with HTTPS
+      secure: isProduction,
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path: '/auth/refresh',
+      path: '/',
     });
   }
 }

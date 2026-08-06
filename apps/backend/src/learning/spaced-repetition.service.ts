@@ -39,11 +39,9 @@ export class SpacedRepetitionService {
       }
 
       case LearningRating.HARD: {
-        consecutive += 1;
-        status =
-          consecutive >= 3 ? LearningStatus.REVIEWING : LearningStatus.LEARNING;
-        // ~1 day (1440 minutes) or small interval growth
-        interval = Math.max(1440, Math.round((interval || 1440) * 1.2));
+        // Hard does NOT increment consecutiveCorrect streak to prevent premature mastering
+        status = LearningStatus.LEARNING;
+        interval = Math.max(1440, Math.round((interval || 1440) * 1.2)); // ~1 day
         ease = Math.max(1.3, ease - 0.15);
         break;
       }
@@ -51,15 +49,15 @@ export class SpacedRepetitionService {
       case LearningRating.GOOD: {
         consecutive += 1;
         if (consecutive === 1) {
-          interval = 1440; // 1 day (1440 min)
+          interval = 1440; // 1 day
           status = LearningStatus.LEARNING;
         } else if (consecutive === 2) {
-          interval = 4320; // 3 days (4320 min)
+          interval = 4320; // 3 days
           status = LearningStatus.REVIEWING;
         } else {
-          interval = Math.round(interval * ease); // 3-7 days+
+          interval = Math.round(interval * ease);
           status =
-            consecutive >= 5
+            consecutive >= 4
               ? LearningStatus.MASTERED
               : LearningStatus.REVIEWING;
         }
@@ -70,22 +68,22 @@ export class SpacedRepetitionService {
         consecutive += 1;
         ease = Number((ease + 0.15).toFixed(2));
         if (consecutive === 1) {
-          interval = 10080; // 7 days (10080 min)
+          interval = 10080; // 7 days
           status = LearningStatus.REVIEWING;
         } else if (consecutive === 2) {
-          interval = 20160; // 14 days (20160 min)
+          interval = 20160; // 14 days
           status = LearningStatus.MASTERED;
         } else {
-          // Significant interval growth up to 30 days (43200 min)
-          interval = Math.min(43200, Math.round(interval * ease * 1.3));
+          interval = Math.round(interval * ease * 1.3);
           status = LearningStatus.MASTERED;
         }
         break;
       }
     }
 
-    // Ensure strictly positive non-zero interval (min 10 minutes)
-    interval = Math.max(10, interval);
+    // Ensure strictly positive non-zero interval (min 10 mins) and cap at 365 days (525600 mins)
+    const MAX_INTERVAL = 525600; // 1 year in minutes
+    interval = Math.min(MAX_INTERVAL, Math.max(10, interval));
     ease = Number(ease.toFixed(2));
 
     const nextReviewAt = new Date(baseDate.getTime() + interval * 60 * 1000);

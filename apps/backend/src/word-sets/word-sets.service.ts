@@ -64,7 +64,12 @@ export class WordSetsService {
 
     const [sets, total] = await queryBuilder.getManyAndCount();
 
-    const data = sets.map((set) => this.toWordSetDto(set, 0, 0));
+    const data = await Promise.all(
+      sets.map(async (set) => {
+        const stats = await this.calculateSetStats(set.id, userId);
+        return this.toWordSetDto(set, stats.wordCount, stats.progressPercent);
+      }),
+    );
 
     return {
       data,
@@ -89,7 +94,8 @@ export class WordSetsService {
       throw new ForbiddenException('You do not have access to this word set');
     }
 
-    return this.toWordSetDto(wordSet, 0, 0);
+    const stats = await this.calculateSetStats(id, currentUserId);
+    return this.toWordSetDto(wordSet, stats.wordCount, stats.progressPercent);
   }
 
   async update(
@@ -124,7 +130,8 @@ export class WordSetsService {
     }
 
     const updatedSet = await this.wordSetRepository.save(wordSet);
-    return this.toWordSetDto(updatedSet, 0, 0);
+    const stats = await this.calculateSetStats(id, userId);
+    return this.toWordSetDto(updatedSet, stats.wordCount, stats.progressPercent);
   }
 
   async remove(id: string, userId: string): Promise<{ message: string }> {
@@ -140,6 +147,31 @@ export class WordSetsService {
 
     await this.wordSetRepository.remove(wordSet);
     return { message: 'Word set deleted successfully' };
+  }
+
+  private async calculateSetStats(
+    setId: string,
+    userId: string,
+  ): Promise<{ wordCount: number; progressPercent: number }> {
+    const query = await this.wordSetRepository.query(
+      `
+      SELECT 
+        COUNT(w.id)::int as "wordCount",
+        COUNT(CASE WHEN lp.status IN ('mastered', 'reviewing') THEN 1 END)::int as "masteredCount"
+      FROM words w
+      LEFT JOIN learning_progress lp ON lp."wordId" = w.id AND lp."userId" = $2
+      WHERE w."setId" = $1
+      `,
+      [setId, userId],
+    );
+
+    const wordCount = query[0]?.wordCount ? parseInt(query[0].wordCount, 10) : 0;
+    const masteredCount = query[0]?.masteredCount ? parseInt(query[0].masteredCount, 10) : 0;
+
+    const progressPercent =
+      wordCount > 0 ? Math.round((masteredCount / wordCount) * 100) : 0;
+
+    return { wordCount, progressPercent };
   }
 
   toWordSetDto(set: WordSet, wordCount = 0, progressPercent = 0): WordSetDto {

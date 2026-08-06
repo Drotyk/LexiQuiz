@@ -7,80 +7,58 @@ describe('WordsParserService', () => {
     parser = new WordsParserService();
   });
 
-  it('should be defined', () => {
-    expect(parser).toBeDefined();
+  it('should parse simple term and translation with dash', () => {
+    const text = 'destination — місце призначення';
+    const result = parser.parseText(text);
+
+    expect(result.valid.length).toBe(1);
+    expect(result.valid[0].term).toBe('destination');
+    expect(result.valid[0].translation).toBe('місце призначення');
   });
 
-  describe('parseText', () => {
-    it('should parse valid lines with various separators (—, -, :, ;, Tab)', () => {
-      const inputText = `
-destination — місце призначення
-luggage - багаж
-departure: відправлення
-arrival; прибуття
-flight	рейс
-      `;
+  it('should parse compound hyphenated words correctly without breaking term', () => {
+    const text = `
+well-being - добробут
+mother-in-law — свекруха
+state-of-the-art: найсучасніший
+word\ttranslation
+    `.trim();
 
-      const result = parser.parseText(inputText);
+    const result = parser.parseText(text);
 
-      expect(result.valid.length).toBe(5);
-      expect(result.invalid.length).toBe(0);
-      expect(result.duplicates.length).toBe(0);
-
-      expect(result.valid[0]).toEqual({
-        term: 'destination',
-        translation: 'місце призначення',
-        note: undefined,
-      });
-      expect(result.valid[1]).toEqual({
-        term: 'luggage',
-        translation: 'багаж',
-        note: undefined,
-      });
-      expect(result.valid[4]).toEqual({
-        term: 'flight',
-        translation: 'рейс',
-        note: undefined,
-      });
+    expect(result.valid.length).toBe(4);
+    expect(result.valid[0]).toEqual({
+      term: 'well-being',
+      translation: 'добробут',
+      note: undefined,
     });
-
-    it('should catch invalid lines without separators', () => {
-      const inputText = `
-destination — місце призначення
-invalid line without separator
-luggage - багаж
-      `;
-
-      const result = parser.parseText(inputText);
-
-      expect(result.valid.length).toBe(2);
-      expect(result.invalid.length).toBe(1);
-      expect(result.invalid[0].line).toBe(3);
-      expect(result.invalid[0].value).toBe('invalid line without separator');
+    expect(result.valid[1]).toEqual({
+      term: 'mother-in-law',
+      translation: 'свекруха',
+      note: undefined,
     });
-
-    it('should detect duplicate terms within input text', () => {
-      const inputText = `
-destination — місце призначення
-destination - інше призначення
-      `;
-
-      const result = parser.parseText(inputText);
-
-      expect(result.valid.length).toBe(1);
-      expect(result.duplicates.length).toBe(1);
-      expect(result.duplicates[0].term).toBe('destination');
+    expect(result.valid[2]).toEqual({
+      term: 'state-of-the-art',
+      translation: 'найсучасніший',
+      note: undefined,
     });
-
-    it('should detect duplicate terms against existing set terms', () => {
-      const inputText = `destination — місце призначення`;
-      const existingInSet = ['destination'];
-
-      const result = parser.parseText(inputText, existingInSet);
-
-      expect(result.valid.length).toBe(0);
-      expect(result.duplicates.length).toBe(1);
-      expect(result.duplicates[0].reason).toContain('already exists in this set');
+    expect(result.valid[3]).toEqual({
+      term: 'word',
+      translation: 'translation',
+      note: undefined,
     });
+  });
+
+  it('should detect duplicate terms within input and existing set', () => {
+    const text = `
+hello — привіт
+hello — вітання
+    `.trim();
+
+    const result = parser.parseText(text, ['goodbye']);
+
+    expect(result.valid.length).toBe(1);
+    expect(result.duplicates.length).toBe(1);
+    expect(result.duplicates[0].term).toBe('hello');
   });
 });

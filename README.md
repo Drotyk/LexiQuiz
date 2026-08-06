@@ -1,77 +1,79 @@
-# WordForge (LexiQuiz)
+# WordForge (LexiQuiz) 🚀
 
-**WordForge (LexiQuiz)** — це сучасний повнофункціональний вебзастосунок для персоналізованого вивчення іноземних слів. Застосунок дозволяє користувачам створювати власні набори слів, зручно імпортувати їх списком, вивчати за допомогою інтерактивних карт-фліперів і квізів, а також автоматично планувати повторення на основі інтервального алгоритму SM-2.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI Pipeline](https://github.com/Drotyk/LexiQuiz/actions/workflows/ci.yml/badge.svg)](https://github.com/Drotyk/LexiQuiz/actions)
 
----
-
-## Основні можливості
-
-- **Управління наборами слів**: Створення, редагування, видалення та пагінація наборів слів з підтримкою рівня приватності (Private / Public).
-- **Масовий імпорт (Bulk Import)**: Швидке додавання слів простим вставленням тексту у форматі `слово — переклад`.
-- **Режим карт (Flashcards)**: Інтерактивні картки для запам'ятовування з фліп-анімацією, гарячими клавішами та мобільними жестами.
-- **Квізи різних типів**:
-  - **Multiple Choice**: Вибір правильної відповіді з 4 варіантів.
-  - **Direct Input**: Введення перекладу з клавіатури з нормалізацією тексту.
-  - **Reverse Translation**: Переклад у зворотному напрямку.
-  - **True/False**: Перевірка правильності пари «слово — переклад».
-- **Інтервальне повторення (Spaced Repetition / SM-2)**: Розрахунок оптимального часу наступного повторення слів залежно від оцінки складності (`Again`, `Hard`, `Good`, `Easy`).
-- **Аналітика та статистика**: Відстеження щоденної мети, серії активних днів (streak), загального прогресу та списку складних слів.
-- **Безпека та авторизація**: JWT Access Token (у пам'яті) + HTTP-Only Cookie Refresh Token, хешування паролів за допомогою `bcrypt`.
+> **WordForge (LexiQuiz)** — Повнофункціональний сучасний вебзастосунок для персоналізованого вивчення іноземних слів з інтервальною системою повторення (SM-2), розумним масовим імпортом, 4 типами адаптивних квізів та аналітикою активності.
 
 ---
 
-## Технологічний стек
+## 🌟 Основні переваги та функціональність
 
-### **Frontend**
-- **Фреймворк**: [Next.js 14](https://nextjs.org/) (App Router), React 18, TypeScript
-- **Стилізація**: Tailwind CSS, Lucide Icons, clsx, tailwind-merge
-- **Управління станом**: TanStack Query (React Query) v5, Zustand (локальний стан квізу)
-- **Форми та валідація**: React Hook Form, Zod
-
-### **Backend**
-- **Фреймворк**: [NestJS 10](https://nestjs.com/), TypeScript
-- **База даних**: PostgreSQL 16, TypeORM 0.3
-- **Аутентифікація**: Passport.js, JWT, Bcrypt, Cookie-Parser
-- **Документація & Валідація**: Swagger (OpenAPI UI), Class-Validator, Class-Transformer
-
-### **Monorepo & Інфраструктура**
-- **Організація**: npm Workspaces
-- **Контейнеризація**: Docker, Docker Compose
-- **Якість коду**: ESLint, Prettier, TypeScript typecheck
-- **Тестування**: Jest
+- **Управління наборами слів**: Створення, редагування, пагінація та налаштування приватності наборів (`Private` / `Public`).
+- **Розумний масовий імпорт (Bulk Import)**: Швидке додавання слів простим вставленням списку із підтримкою популярних розділювачів (`—`, `–`, `-`, `:`, `;`, `Tab`) без пошкодження складних слів із дефісами (`well-being`, `mother-in-law`).
+- **Режим карток (Flashcards)**: Інтерактивний мобільний фліпер із підтримкою тач-жестів та гарячих клавіш (`Space`/`Enter` для перегортання, `1`/`2`/`3`/`4` для оцінки).
+- **Рушій квізів з 4 типами питань**:
+  1. **Multiple Choice** (Вибір з 4 варіантів без витоку правильної відповіді).
+  2. **Direct Input** (Пряме введення перекладу).
+  3. **Reverse Translation** (Зворотний переклад терміну).
+  4. **True/False** (Перевірка пари «слово — переклад»).
+- **Інтервальне повторення (Spaced Repetition / SM-2)**: Сервіс `SpacedRepetitionService` реалізує алгоритм оцінювання (`Again`, `Hard`, `Good`, `Easy`) із гнучкими інтервалами від 10 хвилин до 365 днів.
+- **Серія днів (Streak) та часові пояси**: Автоматичний підрахунок активних днів і виконання щоденної мети з прив'язкою до локального часового поясу користувача (`Europe/Kyiv` тощо).
+- **Безпека та інфраструктура**:
+  - Хешовані `UserSession` сесії refresh-токенів у PostgreSQL з підтримкою відкликання.
+  - Fail-fast перевірка конфігурації через `Joi`.
+  - Захист від зловживань: `Helmet` безпекові заголовки та `@nestjs/throttler` rate-limiting.
+  - Контрольовані міграції TypeORM (`synchronize: false`).
 
 ---
 
-## Структура проєкту
+## 🛠 Технологічний стек
+
+| Сфера | Технології |
+|---|---|
+| **Frontend** | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS, Lucide Icons |
+| **Backend** | NestJS 10, TypeORM, PostgreSQL 16, Passport JWT, Bcrypt, Helmet, Throttler |
+| **Monorepo** | npm Workspaces, Docker Compose, Jest E2E, GitHub Actions CI |
+
+---
+
+## 📁 Структура проєкту
 
 ```text
 LexiQuiz/
 ├── apps/
 │   ├── backend/             # NestJS REST API сервер (Port: 3001)
-│   └── frontend/            # Next.js 14 вебзастосунок (Port: 3000)
+│   │   ├── src/
+│   │   │   ├── auth/        # JWT & Session Revocation
+│   │   │   ├── word-sets/   # WordSet CRUD & Stats
+│   │   │   ├── words/       # Words & Bulk Parser
+│   │   │   ├── learning/    # Flashcards & SpacedRepetition (SM-2)
+│   │   │   ├── quizzes/     # Quiz Generation & Engine
+│   │   │   ├── statistics/  # Analytics & Dashboard Stats
+│   │   │   ├── daily-activity/ # Streaks & Daily Goals
+│   │   │   └── migrations/  # TypeORM Versioned Migrations
+│   │   └── test/            # NestJS E2E Integration Suite
+│   └── frontend/            # Next.js 14 Web App (Port: 3000)
 ├── packages/
-│   ├── shared-types/        # Спільні DTO, інтерфейси та Enums
-│   └── eslint-config/       # Спільна конфігурація ESLint
-├── docs/
-│   └── architecture.md      # Детальна документація архітектури
-├── docker-compose.yml       # Специфікація контейнера PostgreSQL
-├── .env.example             # Шаблон змінних середовища
-└── package.json             # Root monorepo скрипти та залежності
+│   └── shared-types/        # Спільні DTOs та Interfaces
+├── .github/
+│   └── workflows/ci.yml     # GitHub Actions CI Pipeline
+├── docker-compose.yml       # PostgreSQL 16 Database
+└── package.json             # Root monorepo scripts
 ```
 
 ---
 
-## Швидкий старт
+## ⚡ Швидкий старт
 
-### **1. Передумови (Prerequisites)**
-Переконайтеся, що на вашій системі встановлено:
-- **Node.js**: `>= 18.x`
-- **npm**: `>= 9.x`
-- **Docker** та **Docker Compose** (для запуску PostgreSQL)
+### **1. Передумови**
+- Node.js `>= 18.x`
+- npm `>= 9.x`
+- Docker та Docker Compose
 
 ### **2. Клонування репозиторію**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Drotyk/LexiQuiz.git
 cd LexiQuiz
 ```
 
@@ -80,53 +82,54 @@ cd LexiQuiz
 npm install
 ```
 
-### **4. Налаштування змінних середовища**
-Скопіюйте файл `.env.example` у `.env`:
+### **4. Змінні середовища**
+Скопіюйте `.env.example` у `.env`:
 ```bash
 cp .env.example .env
 ```
-При необхідності відредагуйте параметри у `.env` (паролі, ключі JWT тощо).
 
 ### **5. Запуск бази даних PostgreSQL**
-Запустіть PostgreSQL у Docker-контейнері:
 ```bash
 docker compose up -d
 ```
-БД буде доступна за адресою `localhost:5433` (або портом, вказаним у `.env`).
 
-### **6. Запуск застосунку у режимі розробки**
-Запустіть одночасно Backend та Frontend однією командою:
+### **6. Виконання міграцій бази даних**
+```bash
+npm run migration:run --workspace=apps/backend
+```
+
+### **7. Запуск проєкту у режимі розробки**
 ```bash
 npm run dev
 ```
 
-Після запуску:
-- **Frontend** буде доступний за адресою: `http://localhost:3000`
-- **Backend API** буде доступний за адресою: `http://localhost:3001`
-- **Swagger API Docs**: `http://localhost:3001/api/docs`
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:3001](http://localhost:3001)
+- **Swagger API Docs**: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
 
 ---
 
-## Доступні npm-скрипти
+## 🧪 Тестування та перевірка коду
 
-У корені проєкту доступні такі командні скрипти:
+```bash
+# Unit-тести
+npm run test
 
-- **`npm run dev`** — Запуск фронтенду та бекенду паралельно у режимі розробки (`watch`).
-- **`npm run dev:backend`** — Запуск лише бекенду.
-- **`npm run dev:frontend`** — Запуск лише фронтенду.
-- **`npm run build`** — Компіляція спільних типів, бекенду та збірка фронтенду.
-- **`npm run lint`** — Перевірка коду лінтером у всіх воркспейсах.
-- **`npm run typecheck`** — Перевірка типів TypeScript у всіх воркспейсах.
-- **`npm run test`** — Запуск автоматичних тестів.
+# Integration E2E тести бекенду
+npm run test:e2e --workspace=apps/backend
+
+# Перевірка типів TypeScript
+npm run typecheck
+
+# Перевірка стилю коду (ESLint)
+npm run lint
+
+# Продуктивна збірка всіх пакетів
+npm run build
+```
 
 ---
 
-## Документація та Архітектура
+## 📜 Ліцензія
 
-Детальний опис архітектури системи, ER-діаграму бази даних, схему JWT-авторизації та деталі алгоритму інтервального повторення SM-2 можна знайти у файлі [docs/architecture.md](file:///home/palamar/Documents/Project/LexiQuiz/docs/architecture.md).
-
----
-
-## Ліцензія
-
-Приватний проект WordForge / LexiQuiz. Усі права захищено.
+Відкритий вихідний код розповсюджується під ліцензією [MIT License](LICENSE).

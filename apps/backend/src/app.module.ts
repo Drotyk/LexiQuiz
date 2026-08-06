@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import * as Joi from 'joi';
+
 import { HealthModule } from './health/health.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -16,7 +20,26 @@ import { DailyActivityModule } from './daily-activity/daily-activity.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['../../.env', '.env'],
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .default('development'),
+        PORT: Joi.number().default(3001),
+        JWT_ACCESS_SECRET: Joi.string().required(),
+        JWT_REFRESH_SECRET: Joi.string().required(),
+        DATABASE_HOST: Joi.string().default('localhost'),
+        DATABASE_PORT: Joi.number().default(5433),
+        DATABASE_USER: Joi.string().default('wordforge_user'),
+        DATABASE_PASSWORD: Joi.string().default('wordforge_pass'),
+        DATABASE_NAME: Joi.string().default('wordforge'),
+      }),
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 60, // 60 requests per minute global rate limit
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -28,7 +51,9 @@ import { DailyActivityModule } from './daily-activity/daily-activity.module';
         password: configService.get<string>('DATABASE_PASSWORD', 'wordforge_pass'),
         database: configService.get<string>('DATABASE_NAME', 'wordforge'),
         autoLoadEntities: true,
-        synchronize: true, // Enabled for development MVP
+        synchronize: false, // Disabled for controlled migration management
+        migrationsRun: false,
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
     }),
     HealthModule,
@@ -40,6 +65,12 @@ import { DailyActivityModule } from './daily-activity/daily-activity.module';
     QuizzesModule,
     StatisticsModule,
     DailyActivityModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
