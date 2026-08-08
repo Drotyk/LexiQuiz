@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "docker:up": "docker compose up -d",
     "dev:backend": "npm run start:dev --workspace=apps/backend",
     "dev:frontend": "npm run dev --workspace=apps/frontend",
     "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
@@ -18,7 +19,8 @@
     "prelint": "npm run build:shared",
     "pretest": "npm run build:shared",
     "lint": "npm run lint --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "test:root-config": "node --test test/root-config.test.mjs",
+    "test": "npm run test:root-config && npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
