@@ -4,7 +4,7 @@
 
 ---
 
-## 🐳 Локальне середовище та Docker Compose (Dev)
+## Локальне середовище та Docker Compose (Dev)
 
 Для локальної розробки використовується `docker-compose.dev.yml`, що запускає базу даних PostgreSQL:
 
@@ -16,7 +16,7 @@ npm run dev
 
 ---
 
-## 🚀 Продакшн розгортання через Docker Compose (Single VPS)
+## Продакшн розгортання через Docker Compose (Single VPS)
 
 Продакшн конфігурація `docker-compose.prod.yml` забезпечує повну ізоляцію контейнерів у локальній мережі `lexiquiz-network`:
 
@@ -36,7 +36,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.production up -d --bui
 
 ---
 
-## ☁️ Розгортання у хмарі (Managed Cloud Platforms)
+## Розгортання у хмарі (Managed Cloud Platforms)
 
 ### Frontend (Next.js) -> Vercel / Netlify
 1. Підключіть GitHub репозиторій до Vercel.

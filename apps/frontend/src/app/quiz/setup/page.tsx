@@ -66,7 +66,7 @@ export default function QuizSetupPage() {
   if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="text-slate-400 font-mono animate-pulse">Loading quiz setup...</div>
+        <div className="text-gray-400 font-mono animate-pulse">Loading quiz setup...</div>
       </div>
     );
   }
@@ -75,29 +75,29 @@ export default function QuizSetupPage() {
     <main className="max-w-xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       <Link
         href="/sets"
-        className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+        className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Word Sets</span>
       </Link>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-        <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
-          <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="flex items-center space-x-3 border-b border-gray-800 pb-4">
+          <div className="p-3 rounded-xl bg-gray-500/10 text-gray-400">
             <HelpCircle className="w-6 h-6" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">Interactive Quiz</h1>
-            <p className="text-slate-400 text-sm">Test your vocabulary with 4 question modes</p>
+            <p className="text-gray-400 text-sm">Test your vocabulary with 4 question modes</p>
           </div>
         </div>
 
         {sets.length === 0 ? (
-          <div className="text-center py-6 text-slate-400 text-sm space-y-3">
+          <div className="text-center py-6 text-gray-400 text-sm space-y-3">
             <p>You need at least one word set with words to start a quiz.</p>
             <Link
               href="/sets/new"
-              className="inline-block px-4 py-2 rounded-xl bg-sky-500 text-white font-semibold"
+              className="inline-block px-4 py-2 rounded-xl bg-gray-500 text-white font-semibold"
             >
               Create Word Set
             </Link>
@@ -105,14 +105,14 @@ export default function QuizSetupPage() {
         ) : (
           <form onSubmit={handleStartQuiz} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-sky-400" />
+              <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-gray-400" />
                 Select Word Set
               </label>
               <select
                 value={selectedSetId}
                 onChange={(e) => setSelectedSetId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               >
                 {sets.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -123,13 +123,13 @@ export default function QuizSetupPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
                 Number of Questions
               </label>
               <select
                 value={questionCount}
                 onChange={(e) => setQuestionCount(Number(e.target.value))}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               >
                 <option value={5}>5 Questions (Quick Test)</option>
                 <option value={10}>10 Questions (Standard)</option>
@@ -141,7 +141,7 @@ export default function QuizSetupPage() {
               <button
                 type="submit"
                 disabled={isStarting}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-400 hover:to-sky-400 text-white font-bold text-sm transition shadow-lg shadow-indigo-500/20 flex items-center justify-center space-x-2"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-gray-500 to-gray-500 hover:from-gray-400 hover:to-gray-400 text-white font-bold text-sm transition shadow-lg shadow-gray-500/20 flex items-center justify-center space-x-2"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>{isStarting ? 'Starting Quiz...' : 'Start Quiz Now'}</span>

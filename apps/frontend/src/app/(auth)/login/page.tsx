@@ -36,19 +36,19 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
+      <div className="max-w-md w-full bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-xl bg-sky-500/10 text-sky-400 mb-2">
+          <div className="inline-flex p-3 rounded-xl bg-gray-500/10 text-gray-400 mb-2">
             <LogIn className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white">Welcome Back</h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-gray-400 text-sm">
             Sign in to continue your vocabulary journey
           </p>
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-3 text-rose-400 text-sm">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 flex items-start space-x-3 text-gray-400 text-sm">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -56,7 +56,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Email Address
             </label>
             <input
@@ -65,12 +65,12 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="user@example.com"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white placeholder-slate-500 text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white placeholder-gray-500 text-sm outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Password
             </label>
             <input
@@ -79,22 +79,22 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white placeholder-slate-500 text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white placeholder-gray-500 text-sm outline-none transition"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-sky-500/20"
+            className="w-full py-3 px-4 rounded-xl bg-gray-500 hover:bg-gray-400 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-gray-500/20"
           >
             {isSubmitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-gray-400">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-sky-400 hover:underline font-medium">
+          <Link href="/register" className="text-gray-400 hover:underline font-medium">
             Create one
           </Link>
         </div>

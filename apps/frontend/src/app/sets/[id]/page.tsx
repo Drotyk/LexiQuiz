@@ -219,7 +219,7 @@ export default function WordSetDetailPage() {
   if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="text-slate-400 font-mono animate-pulse">Loading set details...</div>
+        <div className="text-gray-400 font-mono animate-pulse">Loading set details...</div>
       </div>
     );
   }
@@ -229,12 +229,12 @@ export default function WordSetDetailPage() {
       <main className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         <Link
           href="/sets"
-          className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+          className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Word Sets</span>
         </Link>
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center text-gray-400">
           Word set not found or access forbidden.
         </div>
       </main>
@@ -247,33 +247,33 @@ export default function WordSetDetailPage() {
     <main className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
       <Link
         href="/sets"
-        className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+        className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Word Sets</span>
       </Link>
 
       {/* Set Header Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
-              <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-gray-500/10 text-gray-400 border border-gray-500/20 uppercase tracking-wider">
                 {set.sourceLanguage} → {set.targetLanguage}
               </span>
-              <div className="flex items-center space-x-1.5 text-slate-400 text-xs font-medium">
+              <div className="flex items-center space-x-1.5 text-gray-400 text-xs font-medium">
                 {set.visibility === 'private' && (
                   <span title="Private" className="flex items-center gap-1">
                     <Lock className="w-3.5 h-3.5" /> Private
                   </span>
                 )}
                 {set.visibility === 'link' && (
-                  <span title="Accessible via Link" className="flex items-center gap-1 text-sky-400">
+                  <span title="Accessible via Link" className="flex items-center gap-1 text-gray-400">
                     <Link2 className="w-3.5 h-3.5" /> Link Access
                   </span>
                 )}
                 {set.visibility === 'public' && (
-                  <span title="Public" className="flex items-center gap-1 text-emerald-400">
+                  <span title="Public" className="flex items-center gap-1 text-gray-400">
                     <Globe className="w-3.5 h-3.5" /> Public
                   </span>
                 )}
@@ -282,7 +282,7 @@ export default function WordSetDetailPage() {
 
             <h1 className="text-3xl font-extrabold text-white tracking-tight">{set.title}</h1>
             {set.description && (
-              <p className="text-slate-300 text-base leading-relaxed">{set.description}</p>
+              <p className="text-gray-300 text-base leading-relaxed">{set.description}</p>
             )}
           </div>
 
@@ -290,7 +290,7 @@ export default function WordSetDetailPage() {
             <div className="flex items-center space-x-2">
               <Link
                 href={`/sets/${set.id}/edit`}
-                className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm transition border border-slate-700"
+                className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium text-sm transition border border-gray-700"
               >
                 <Edit3 className="w-4 h-4" />
                 <span>Edit Set</span>
@@ -300,10 +300,10 @@ export default function WordSetDetailPage() {
         </div>
 
         {/* Action Controls */}
-        <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-6 text-sm text-slate-400 w-full sm:w-auto">
+        <div className="pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center space-x-6 text-sm text-gray-400 w-full sm:w-auto">
             <span className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-sky-400" />
+              <BookOpen className="w-4 h-4 text-gray-400" />
               <strong className="text-white font-semibold">{totalWords}</strong> Words
             </span>
           </div>
@@ -311,7 +311,7 @@ export default function WordSetDetailPage() {
           <div className="flex items-center space-x-3 w-full sm:w-auto">
             <Link
               href={`/study/${set.id}`}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm transition shadow-lg shadow-sky-500/20"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-gray-500 hover:bg-gray-400 text-white font-semibold text-sm transition shadow-lg shadow-gray-500/20"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>Study Cards</span>
@@ -321,10 +321,10 @@ export default function WordSetDetailPage() {
       </div>
 
       {/* Words Section */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <Layers className="w-6 h-6 text-sky-400" />
+            <Layers className="w-6 h-6 text-gray-400" />
             <h2 className="text-xl font-bold text-white">Words List</h2>
           </div>
 
@@ -332,9 +332,9 @@ export default function WordSetDetailPage() {
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowBulkModal(true)}
-                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition border border-slate-700"
+                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-sm transition border border-gray-700"
               >
-                <Upload className="w-4 h-4 text-indigo-400" />
+                <Upload className="w-4 h-4 text-gray-400" />
                 <span>Bulk Import</span>
               </button>
               <button
@@ -342,7 +342,7 @@ export default function WordSetDetailPage() {
                   resetWordForm();
                   setShowAddModal(true);
                 }}
-                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm transition shadow-md shadow-sky-500/20"
+                className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-gray-500 hover:bg-gray-400 text-white font-semibold text-sm transition shadow-md shadow-gray-500/20"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Word</span>
@@ -354,20 +354,20 @@ export default function WordSetDetailPage() {
         {/* Filter & Selection Bar */}
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search words by term or translation..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm outline-none focus:border-sky-500"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-950 border border-gray-800 text-white text-sm outline-none focus:border-gray-500"
             />
           </div>
 
           {selectedWordIds.length > 0 && isOwner && (
             <button
               onClick={handleBulkDelete}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 text-sm font-semibold hover:bg-rose-500/20 transition"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-gray-500/10 text-gray-400 border border-gray-500/20 text-sm font-semibold hover:bg-gray-500/20 transition"
             >
               <Trash2 className="w-4 h-4" />
               <span>Delete ({selectedWordIds.length}) Selected</span>
@@ -377,14 +377,14 @@ export default function WordSetDetailPage() {
 
         {/* Words Table */}
         {words.length === 0 ? (
-          <div className="p-12 text-center bg-slate-950/40 border border-slate-800/80 rounded-xl space-y-3">
-            <p className="text-slate-400 text-sm">
+          <div className="p-12 text-center bg-gray-950/40 border border-gray-800/80 rounded-xl space-y-3">
+            <p className="text-gray-400 text-sm">
               {search ? 'No words match your search.' : 'No words added yet.'}
             </p>
             {isOwner && !search && (
               <button
                 onClick={() => setShowBulkModal(true)}
-                className="inline-flex items-center space-x-2 text-sky-400 hover:underline font-medium text-sm"
+                className="inline-flex items-center space-x-2 text-gray-400 hover:underline font-medium text-sm"
               >
                 <Upload className="w-4 h-4" />
                 <span>Paste a list of words using Bulk Import</span>
@@ -392,9 +392,9 @@ export default function WordSetDetailPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-800">
-            <table className="w-full text-left text-sm text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-800">
+          <div className="overflow-x-auto rounded-xl border border-gray-800">
+            <table className="w-full text-left text-sm text-gray-300">
+              <thead className="bg-gray-950 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-800">
                 <tr>
                   {isOwner && (
                     <th className="p-4 w-10">
@@ -402,7 +402,7 @@ export default function WordSetDetailPage() {
                         type="checkbox"
                         checked={words.length > 0 && selectedWordIds.length === words.length}
                         onChange={toggleSelectAll}
-                        className="rounded border-slate-800 bg-slate-900 text-sky-500 focus:ring-0 cursor-pointer"
+                        className="rounded border-gray-800 bg-gray-900 text-gray-500 focus:ring-0 cursor-pointer"
                       />
                     </th>
                   )}
@@ -413,38 +413,38 @@ export default function WordSetDetailPage() {
                   {isOwner && <th className="p-4 text-right">Actions</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-gray-800/60">
                 {words.map((w) => (
-                  <tr key={w.id} className="hover:bg-slate-800/40 transition-colors">
+                  <tr key={w.id} className="hover:bg-gray-800/40 transition-colors">
                     {isOwner && (
                       <td className="p-4">
                         <input
                           type="checkbox"
                           checked={selectedWordIds.includes(w.id)}
                           onChange={() => toggleSelectWord(w.id)}
-                          className="rounded border-slate-800 bg-slate-900 text-sky-500 focus:ring-0 cursor-pointer"
+                          className="rounded border-gray-800 bg-gray-900 text-gray-500 focus:ring-0 cursor-pointer"
                         />
                       </td>
                     )}
                     <td className="p-4 font-semibold text-white">{w.term}</td>
-                    <td className="p-4 text-slate-200">{w.translation}</td>
-                    <td className="p-4 text-slate-400 font-mono text-xs">
+                    <td className="p-4 text-gray-200">{w.translation}</td>
+                    <td className="p-4 text-gray-400 font-mono text-xs">
                       {w.transcription || '—'}
                     </td>
-                    <td className="p-4 text-slate-400 text-xs italic max-w-xs truncate">
+                    <td className="p-4 text-gray-400 text-xs italic max-w-xs truncate">
                       {w.example || '—'}
                     </td>
                     {isOwner && (
                       <td className="p-4 text-right space-x-2">
                         <button
                           onClick={() => openEditWordModal(w)}
-                          className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                          className="p-1.5 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white transition"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteWord(w.id)}
-                          className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 transition"
+                          className="p-1.5 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-400 transition"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -460,21 +460,21 @@ export default function WordSetDetailPage() {
 
       {/* Add / Edit Word Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 bg-gray-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-gray-800 pb-3">
               <h3 className="text-lg font-bold text-white">
                 {editingWord ? 'Edit Word' : 'Add New Word'}
               </h3>
-              <button onClick={resetWordForm} className="text-slate-400 hover:text-white">
+              <button onClick={resetWordForm} className="text-gray-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveWord} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
-                  Term <span className="text-rose-400">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Term <span className="text-gray-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -482,13 +482,13 @@ export default function WordSetDetailPage() {
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
                   placeholder="e.g., destination"
-                  className="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm outline-none focus:border-sky-500"
+                  className="w-full px-4 py-2 rounded-xl bg-gray-950 border border-gray-800 text-white text-sm outline-none focus:border-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
-                  Translation <span className="text-rose-400">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Translation <span className="text-gray-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -496,12 +496,12 @@ export default function WordSetDetailPage() {
                   value={translation}
                   onChange={(e) => setTranslation(e.target.value)}
                   placeholder="e.g., місце призначення"
-                  className="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm outline-none focus:border-sky-500"
+                  className="w-full px-4 py-2 rounded-xl bg-gray-950 border border-gray-800 text-white text-sm outline-none focus:border-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   Transcription (optional)
                 </label>
                 <input
@@ -509,12 +509,12 @@ export default function WordSetDetailPage() {
                   value={transcription}
                   onChange={(e) => setTranscription(e.target.value)}
                   placeholder="e.g., [ˌdestɪˈneɪʃn]"
-                  className="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm outline-none focus:border-sky-500"
+                  className="w-full px-4 py-2 rounded-xl bg-gray-950 border border-gray-800 text-white text-sm outline-none focus:border-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   Example sentence (optional)
                 </label>
                 <textarea
@@ -522,7 +522,7 @@ export default function WordSetDetailPage() {
                   value={example}
                   onChange={(e) => setExample(e.target.value)}
                   placeholder="e.g., We reached our destination safely."
-                  className="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm outline-none focus:border-sky-500 resize-none"
+                  className="w-full px-4 py-2 rounded-xl bg-gray-950 border border-gray-800 text-white text-sm outline-none focus:border-gray-500 resize-none"
                 />
               </div>
 
@@ -530,14 +530,14 @@ export default function WordSetDetailPage() {
                 <button
                   type="button"
                   onClick={resetWordForm}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-medium hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingWord}
-                  className="px-5 py-2 rounded-xl bg-sky-500 text-white text-sm font-semibold hover:bg-sky-400 disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-gray-500 text-white text-sm font-semibold hover:bg-gray-400 disabled:opacity-50"
                 >
                   {isSubmittingWord ? 'Saving...' : 'Save Word'}
                 </button>
@@ -549,15 +549,15 @@ export default function WordSetDetailPage() {
 
       {/* Bulk Import Modal */}
       {showBulkModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="fixed inset-0 bg-gray-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
               <div className="flex items-center space-x-3">
-                <Upload className="w-6 h-6 text-indigo-400" />
+                <Upload className="w-6 h-6 text-gray-400" />
                 <div>
                   <h3 className="text-xl font-bold text-white">Bulk Word Import</h3>
-                  <p className="text-slate-400 text-xs">
-                    Paste multiple lines in format: <code className="text-sky-400">word — translation</code>
+                  <p className="text-gray-400 text-xs">
+                    Paste multiple lines in format: <code className="text-gray-400">word — translation</code>
                   </p>
                 </div>
               </div>
@@ -566,14 +566,14 @@ export default function WordSetDetailPage() {
                   setShowBulkModal(false);
                   setBulkPreview(null);
                 }}
-                className="text-slate-400 hover:text-white"
+                className="text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-slate-300">
+              <label className="block text-sm font-medium text-gray-300">
                 Paste Words (Separators allowed: —, -, :, ;, Tab):
               </label>
               <textarea
@@ -584,17 +584,17 @@ export default function WordSetDetailPage() {
                   setBulkPreview(null);
                 }}
                 placeholder={`destination — місце призначення\nluggage — багаж\ndeparture — відправлення`}
-                className="w-full p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-sm text-white placeholder-slate-600 outline-none focus:border-sky-500"
+                className="w-full p-4 rounded-xl bg-gray-950 border border-gray-800 font-mono text-sm text-white placeholder-gray-600 outline-none focus:border-gray-500"
               />
 
               <div className="flex justify-between items-center">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-gray-400">
                   Supported formats: word — translation | word : translation | word TAB translation
                 </span>
                 <button
                   onClick={handlePreviewBulk}
                   disabled={!bulkText.trim() || isPreviewing}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium transition"
+                  className="px-4 py-2 rounded-xl bg-gray-600 hover:bg-gray-500 disabled:opacity-50 text-white text-sm font-medium transition"
                 >
                   {isPreviewing ? 'Parsing...' : 'Preview Recognized Words'}
                 </button>
@@ -603,31 +603,31 @@ export default function WordSetDetailPage() {
 
             {/* Live Preview Section */}
             {bulkPreview && (
-              <div className="space-y-4 pt-4 border-t border-slate-800">
+              <div className="space-y-4 pt-4 border-t border-gray-800">
                 <h4 className="text-lg font-bold text-white flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-sky-400" />
+                  <FileText className="w-5 h-5 text-gray-400" />
                   Parse Summary:
-                  <span className="text-emerald-400 text-sm font-normal">
+                  <span className="text-gray-400 text-sm font-normal">
                     {bulkPreview.valid.length} valid
                   </span>
                   ,
-                  <span className="text-amber-400 text-sm font-normal">
+                  <span className="text-gray-400 text-sm font-normal">
                     {bulkPreview.duplicates.length} duplicates
                   </span>
                   ,
-                  <span className="text-rose-400 text-sm font-normal">
+                  <span className="text-gray-400 text-sm font-normal">
                     {bulkPreview.invalid.length} errors
                   </span>
                 </h4>
 
                 {/* Invalid / Errors */}
                 {bulkPreview.invalid.length > 0 && (
-                  <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 space-y-2">
-                    <div className="text-rose-400 font-semibold text-sm flex items-center gap-2">
+                  <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 space-y-2">
+                    <div className="text-gray-400 font-semibold text-sm flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4" />
                       Ignored Lines ({bulkPreview.invalid.length}):
                     </div>
-                    <ul className="text-xs text-rose-300 space-y-1 font-mono">
+                    <ul className="text-xs text-gray-300 space-y-1 font-mono">
                       {bulkPreview.invalid.map((inv, idx) => (
                         <li key={idx}>
                           Line {inv.line}: &quot;{inv.value}&quot; — {inv.reason}
@@ -639,12 +639,12 @@ export default function WordSetDetailPage() {
 
                 {/* Duplicates */}
                 {bulkPreview.duplicates.length > 0 && (
-                  <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-2">
-                    <div className="text-amber-400 font-semibold text-sm flex items-center gap-2">
+                  <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 space-y-2">
+                    <div className="text-gray-400 font-semibold text-sm flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4" />
                       Skipped Duplicates ({bulkPreview.duplicates.length}):
                     </div>
-                    <ul className="text-xs text-amber-300 space-y-1 font-mono">
+                    <ul className="text-xs text-gray-300 space-y-1 font-mono">
                       {bulkPreview.duplicates.map((dup, idx) => (
                         <li key={idx}>
                           Line {dup.line}: {dup.term} — {dup.reason}
@@ -657,35 +657,35 @@ export default function WordSetDetailPage() {
                 {/* Valid Preview List */}
                 {bulkPreview.valid.length > 0 && (
                   <div className="space-y-2">
-                    <div className="text-emerald-400 font-semibold text-sm flex items-center gap-2">
+                    <div className="text-gray-400 font-semibold text-sm flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
                       Ready to import ({bulkPreview.valid.length} words):
                     </div>
-                    <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-800 bg-slate-950 p-3 space-y-1 text-xs">
+                    <div className="max-h-48 overflow-y-auto rounded-xl border border-gray-800 bg-gray-950 p-3 space-y-1 text-xs">
                       {bulkPreview.valid.map((v, i) => (
-                        <div key={i} className="flex justify-between text-slate-300 py-1 border-b border-slate-900 last:border-0">
+                        <div key={i} className="flex justify-between text-gray-300 py-1 border-b border-gray-900 last:border-0">
                           <span className="font-semibold text-white">{v.term}</span>
-                          <span className="text-slate-400">{v.translation}</span>
+                          <span className="text-gray-400">{v.translation}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                <div className="pt-4 flex justify-end space-x-3 border-t border-slate-800">
+                <div className="pt-4 flex justify-end space-x-3 border-t border-gray-800">
                   <button
                     onClick={() => {
                       setShowBulkModal(false);
                       setBulkPreview(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-medium hover:bg-slate-700"
+                    className="px-4 py-2 rounded-xl bg-gray-800 text-gray-300 text-sm font-medium hover:bg-gray-700"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConfirmBulkImport}
                     disabled={bulkPreview.valid.length === 0 || isImporting}
-                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-emerald-500/20"
+                    className="px-6 py-2.5 rounded-xl bg-gray-600 hover:bg-gray-500 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-gray-500/20"
                   >
                     {isImporting ? 'Importing...' : `Import ${bulkPreview.valid.length} Words`}
                   </button>

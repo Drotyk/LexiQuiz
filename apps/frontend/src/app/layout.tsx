@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased selection:bg-sky-500 selection:text-white min-h-screen flex flex-col bg-slate-950 text-slate-100">
+      <body className="antialiased selection:bg-white selection:text-black min-h-screen flex flex-col bg-black text-gray-100">
         <QueryProvider>
           <AuthProvider>
             <Navbar />

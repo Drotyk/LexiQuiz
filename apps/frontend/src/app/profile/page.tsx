@@ -98,7 +98,7 @@ export default function ProfileSettingsPage() {
   if (isAuthLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="text-slate-400 font-mono animate-pulse">Loading settings...</div>
+        <div className="text-gray-400 font-mono animate-pulse">Loading settings...</div>
       </div>
     );
   }
@@ -107,35 +107,35 @@ export default function ProfileSettingsPage() {
     <main className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
       <Link
         href="/"
-        className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+        className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Dashboard</span>
       </Link>
 
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="flex items-center justify-between border-b border-gray-800 pb-4">
         <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
-          <Settings className="w-8 h-8 text-sky-400" />
+          <Settings className="w-8 h-8 text-gray-400" />
           Account & Profile Settings
         </h1>
       </div>
 
       {/* 1. General Profile Settings */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <User className="w-5 h-5 text-sky-400" />
+          <User className="w-5 h-5 text-gray-400" />
           Profile Details
         </h2>
 
         {profileSuccessMsg && (
-          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 text-gray-400 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
             <span>{profileSuccessMsg}</span>
           </div>
         )}
 
         {profileErrorMsg && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 text-gray-400 text-sm flex items-center gap-2">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>{profileErrorMsg}</span>
           </div>
@@ -143,19 +143,19 @@ export default function ProfileSettingsPage() {
 
         <form onSubmit={handleUpdateProfile} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Email Address (Read-only)
             </label>
             <input
               type="text"
               disabled
               value={user?.email || ''}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-400 text-sm outline-none cursor-not-allowed font-mono"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950/60 border border-gray-800 text-gray-400 text-sm outline-none cursor-not-allowed font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Display Name
             </label>
             <input
@@ -163,14 +163,14 @@ export default function ProfileSettingsPage() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5 flex items-center gap-2">
-                <Target className="w-4 h-4 text-amber-400" />
+              <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-2">
+                <Target className="w-4 h-4 text-gray-400" />
                 Daily Word Goal
               </label>
               <input
@@ -180,19 +180,19 @@ export default function ProfileSettingsPage() {
                 required
                 value={dailyGoal}
                 onChange={(e) => setDailyGoal(Number(e.target.value))}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5 flex items-center gap-2">
-                <Globe className="w-4 h-4 text-indigo-400" />
+              <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-gray-400" />
                 Timezone
               </label>
               <select
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               >
                 <option value="Europe/Kyiv">Europe/Kyiv (GMT+3)</option>
                 <option value="UTC">UTC (Coordinated Universal Time)</option>
@@ -207,7 +207,7 @@ export default function ProfileSettingsPage() {
             <button
               type="submit"
               disabled={isUpdatingProfile}
-              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white font-bold text-sm transition shadow-lg shadow-sky-500/20"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-gray-500 hover:bg-gray-400 disabled:opacity-50 text-white font-bold text-sm transition shadow-lg shadow-gray-500/20"
             >
               <Save className="w-4 h-4" />
               <span>{isUpdatingProfile ? 'Saving Changes...' : 'Save Profile Settings'}</span>
@@ -217,21 +217,21 @@ export default function ProfileSettingsPage() {
       </div>
 
       {/* 2. Password Change Settings */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <Lock className="w-5 h-5 text-indigo-400" />
+          <Lock className="w-5 h-5 text-gray-400" />
           Security & Password
         </h2>
 
         {passwordSuccessMsg && (
-          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 text-gray-400 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
             <span>{passwordSuccessMsg}</span>
           </div>
         )}
 
         {passwordErrorMsg && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 text-gray-400 text-sm flex items-center gap-2">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>{passwordErrorMsg}</span>
           </div>
@@ -239,7 +239,7 @@ export default function ProfileSettingsPage() {
 
         <form onSubmit={handleUpdatePassword} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Current Password
             </label>
             <input
@@ -248,13 +248,13 @@ export default function ProfileSettingsPage() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
                 New Password
               </label>
               <input
@@ -264,12 +264,12 @@ export default function ProfileSettingsPage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
                 Confirm New Password
               </label>
               <input
@@ -279,7 +279,7 @@ export default function ProfileSettingsPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ export default function ProfileSettingsPage() {
             <button
               type="submit"
               disabled={isUpdatingPassword}
-              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-sm transition shadow-lg shadow-indigo-500/20"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-gray-600 hover:bg-gray-500 disabled:opacity-50 text-white font-bold text-sm transition shadow-lg shadow-gray-500/20"
             >
               <Lock className="w-4 h-4" />
               <span>{isUpdatingPassword ? 'Updating Password...' : 'Update Password'}</span>

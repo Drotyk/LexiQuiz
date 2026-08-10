@@ -78,7 +78,7 @@ export default function ActiveQuizPage() {
   if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="text-slate-400 font-mono animate-pulse">Loading question...</div>
+        <div className="text-gray-400 font-mono animate-pulse">Loading question...</div>
       </div>
     );
   }
@@ -97,28 +97,28 @@ export default function ActiveQuizPage() {
       <div className="flex items-center justify-between">
         <Link
           href="/sets"
-          className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+          className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Exit Quiz</span>
         </Link>
-        <span className="text-xs font-mono font-semibold text-indigo-400">
+        <span className="text-xs font-mono font-semibold text-gray-400">
           Question {question.questionIndex + 1} of {question.totalQuestions}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+      <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-800">
         <div
-          className="bg-gradient-to-r from-indigo-500 to-sky-500 h-full transition-all duration-300"
+          className="bg-gradient-to-r from-gray-500 to-gray-500 h-full transition-all duration-300"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
 
       {/* Main Question Card */}
-      <div className="flex-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
+      <div className="flex-1 bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
         <div className="space-y-4 text-center my-auto">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/10 text-gray-400 border border-gray-500/20 uppercase tracking-wider">
             {question.questionType.replace('_', ' ')}
           </span>
 
@@ -127,10 +127,10 @@ export default function ActiveQuizPage() {
           </h2>
 
           {question.questionType === QuestionType.TRUE_FALSE && question.displayPair && (
-            <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 max-w-sm mx-auto space-y-2">
-              <div className="text-2xl font-bold text-sky-400">{question.displayPair.term}</div>
-              <div className="text-sm text-slate-400">equals</div>
-              <div className="text-xl font-semibold text-emerald-400">
+            <div className="p-6 rounded-2xl bg-gray-950/80 border border-gray-800 max-w-sm mx-auto space-y-2">
+              <div className="text-2xl font-bold text-gray-400">{question.displayPair.term}</div>
+              <div className="text-sm text-gray-400">equals</div>
+              <div className="text-xl font-semibold text-gray-400">
                 {question.displayPair.translation}
               </div>
             </div>
@@ -150,9 +150,9 @@ export default function ActiveQuizPage() {
                       setSelectedOption(opt);
                       handleSubmitAnswer(opt);
                     }}
-                    className="p-4 rounded-2xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500/50 text-slate-200 font-semibold text-base transition text-left active:scale-[0.99]"
+                    className="p-4 rounded-2xl bg-gray-950 hover:bg-gray-800 border border-gray-800 hover:border-gray-500/50 text-gray-200 font-semibold text-base transition text-left active:scale-[0.99]"
                   >
-                    <span className="text-xs font-mono text-slate-500 mr-2">[{i + 1}]</span>
+                    <span className="text-xs font-mono text-gray-500 mr-2">[{i + 1}]</span>
                     {opt}
                   </button>
                 ))}
@@ -175,12 +175,12 @@ export default function ActiveQuizPage() {
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   placeholder="Type your answer here..."
-                  className="w-full px-5 py-4 rounded-2xl bg-slate-950 border border-slate-800 text-white font-medium text-lg outline-none focus:border-indigo-500 transition"
+                  className="w-full px-5 py-4 rounded-2xl bg-gray-950 border border-gray-800 text-white font-medium text-lg outline-none focus:border-gray-500 transition"
                 />
                 <button
                   type="submit"
                   disabled={!userAnswer.trim() || isSubmitting}
-                  className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-sm transition flex items-center justify-center space-x-2"
+                  className="w-full py-3.5 rounded-2xl bg-gray-600 hover:bg-gray-500 disabled:opacity-50 text-white font-bold text-sm transition flex items-center justify-center space-x-2"
                 >
                   <Send className="w-4 h-4" />
                   <span>Submit Answer</span>
@@ -193,13 +193,13 @@ export default function ActiveQuizPage() {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => handleSubmitAnswer('true')}
-                  className="py-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 font-bold text-lg transition active:scale-95"
+                  className="py-4 rounded-2xl bg-gray-500/10 hover:bg-gray-500/20 border border-gray-500/20 text-gray-400 font-bold text-lg transition active:scale-95"
                 >
                   True (Правда)
                 </button>
                 <button
                   onClick={() => handleSubmitAnswer('false')}
-                  className="py-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 font-bold text-lg transition active:scale-95"
+                  className="py-4 rounded-2xl bg-gray-500/10 hover:bg-gray-500/20 border border-gray-500/20 text-gray-400 font-bold text-lg transition active:scale-95"
                 >
                   False (Неправда)
                 </button>
@@ -210,20 +210,20 @@ export default function ActiveQuizPage() {
           /* Answer Feedback Banner */
           <div className="space-y-4 animate-fadeIn">
             {answerResult.isCorrect ? (
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center space-x-3 text-emerald-400">
+              <div className="p-4 rounded-2xl bg-gray-500/10 border border-gray-500/20 flex items-center space-x-3 text-gray-400">
                 <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
                 <div>
                   <div className="font-bold text-base">Correct!</div>
-                  <div className="text-xs text-emerald-300/80">Well done, keep going!</div>
+                  <div className="text-xs text-gray-300/80">Well done, keep going!</div>
                 </div>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 space-y-1 text-rose-400">
+              <div className="p-4 rounded-2xl bg-gray-500/10 border border-gray-500/20 space-y-1 text-gray-400">
                 <div className="flex items-center space-x-3 font-bold text-base">
                   <XCircle className="w-6 h-6 flex-shrink-0" />
                   <span>Incorrect</span>
                 </div>
-                <div className="text-xs text-rose-300/90 pl-9">
+                <div className="text-xs text-gray-300/90 pl-9">
                   Correct Answer:{' '}
                   <strong className="text-white font-mono">{answerResult.correctAnswer}</strong>
                 </div>
@@ -232,7 +232,7 @@ export default function ActiveQuizPage() {
 
             <button
               onClick={handleNextQuestion}
-              className="w-full py-4 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-base transition shadow-lg shadow-sky-500/20"
+              className="w-full py-4 rounded-2xl bg-gray-500 hover:bg-gray-400 text-white font-bold text-base transition shadow-lg shadow-gray-500/20"
             >
               {question.questionIndex + 1 >= question.totalQuestions
                 ? 'View Results'

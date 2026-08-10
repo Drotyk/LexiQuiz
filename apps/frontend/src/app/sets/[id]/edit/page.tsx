@@ -77,7 +77,7 @@ export default function EditWordSetPage() {
   if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="text-slate-400 font-mono animate-pulse">Loading set...</div>
+        <div className="text-gray-400 font-mono animate-pulse">Loading set...</div>
       </div>
     );
   }
@@ -86,25 +86,25 @@ export default function EditWordSetPage() {
     <main className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
       <Link
         href={`/sets/${id}`}
-        className="inline-flex items-center space-x-2 text-sm font-medium text-slate-400 hover:text-white transition"
+        className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Cancel & Return</span>
       </Link>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
-        <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
-          <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="flex items-center space-x-3 border-b border-gray-800 pb-4">
+          <div className="p-2.5 rounded-xl bg-gray-500/10 text-gray-400">
             <Edit3 className="w-6 h-6" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">Edit Word Set</h1>
-            <p className="text-slate-400 text-sm">Update collection details</p>
+            <p className="text-gray-400 text-sm">Update collection details</p>
           </div>
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-3 text-rose-400 text-sm">
+          <div className="p-4 rounded-xl bg-gray-500/10 border border-gray-500/20 flex items-start space-x-3 text-gray-400 text-sm">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -112,33 +112,33 @@ export default function EditWordSetPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Set Title <span className="text-rose-400">*</span>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              Set Title <span className="text-gray-400">*</span>
             </label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Description (optional)
             </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition resize-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition resize-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
                 Source Language
               </label>
               <input
@@ -146,12 +146,12 @@ export default function EditWordSetPage() {
                 required
                 value={sourceLanguage}
                 onChange={(e) => setSourceLanguage(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
                 Target Language
               </label>
               <input
@@ -159,19 +159,19 @@ export default function EditWordSetPage() {
                 required
                 value={targetLanguage}
                 onChange={(e) => setTargetLanguage(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
               Visibility Scope
             </label>
             <select
               value={visibility}
               onChange={(e) => setVisibility(e.target.value as WordSetVisibility)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-white text-sm outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl bg-gray-950 border border-gray-800 focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-white text-sm outline-none transition"
             >
               <option value={WordSetVisibility.PRIVATE}>Private (Only me)</option>
               <option value={WordSetVisibility.LINK}>Link Only (Anyone with link)</option>
@@ -182,14 +182,14 @@ export default function EditWordSetPage() {
           <div className="pt-4 flex justify-end space-x-3">
             <Link
               href={`/sets/${id}`}
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition"
+              className="px-5 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-sm transition"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-sky-500/20"
+              className="px-6 py-2.5 rounded-xl bg-gray-500 hover:bg-gray-400 disabled:opacity-50 text-white font-semibold text-sm transition shadow-lg shadow-gray-500/20"
             >
               {isSubmitting ? 'Saving...' : 'Save Changes'}
             </button>
