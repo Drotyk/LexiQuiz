@@ -6,11 +6,14 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponse } from '@wordforge/shared-types';
@@ -88,15 +91,18 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Log out user and clear refresh token cookie' })
   @ApiResponse({ status: 200, description: 'Logged out successfully' })
   async logout(
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
+    @CurrentUser('id') userId: string,
   ): Promise<{ message: string }> {
     const refreshToken = request.cookies?.refreshToken;
 
-    await this.authService.logout('', refreshToken);
+    await this.authService.logout(userId, refreshToken);
 
     response.clearCookie('refreshToken', {
       httpOnly: true,
