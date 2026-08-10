@@ -11,7 +11,10 @@ test('root package exposes the Docker startup command', async () => {
     await readFile(join(projectRoot, 'package.json'), 'utf8'),
   );
 
-  assert.equal(packageJson.scripts['docker:up'], 'docker compose up -d');
+  assert.equal(
+    packageJson.scripts['docker:up'],
+    'docker compose --env-file ./.env -f ./docker-compose.yml up -d',
+  );
 });
 
 test('pnpm workspace manifest includes application and package workspaces', async () => {
