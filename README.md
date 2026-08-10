@@ -4,12 +4,6 @@
 
 [Live Demo](http://localhost:3000) • [Swagger API Docs](http://localhost:3001/api/docs) • [Report Bug](https://github.com/Drotyk/LexiQuiz/issues)
 
-[![CI Pipeline](https://github.com/Drotyk/LexiQuiz/actions/workflows/ci.yml/badge.svg)](https://github.com/Drotyk/LexiQuiz/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Node.js](https://img.shields.io/badge/Node.js-22.x_LTS-green?logo=node.js)
-![Next.js](https://img.shields.io/badge/Next.js-14_App_Router-black?logo=next.js)
-![NestJS](https://img.shields.io/badge/NestJS-10.x-red?logo=nestjs)
-
 ---
 
 ## Статус MVP
