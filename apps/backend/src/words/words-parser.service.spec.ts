@@ -61,4 +61,16 @@ hello — вітання
     expect(result.duplicates.length).toBe(1);
     expect(result.duplicates[0].term).toBe('hello');
   });
+
+  it('should parse whitespace-separated hyphens without regex backtracking', () => {
+    const result = parser.parseText(`term\u00a0-\u00a0translation`);
+
+    expect(result.valid).toEqual([
+      {
+        term: 'term',
+        translation: 'translation',
+        note: undefined,
+      },
+    ]);
+  });
 });

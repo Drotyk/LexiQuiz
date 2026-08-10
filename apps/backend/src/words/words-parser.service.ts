@@ -112,13 +112,19 @@ export class WordsParserService {
       }
     }
 
-    // Fallback: single hyphen surrounded by whitespace or at boundary
-    const hyphenSpaceMatch = line.match(/^(.+?)\s+-\s+(.+)$/);
-    if (hyphenSpaceMatch) {
-      return {
-        term: hyphenSpaceMatch[1].trim(),
-        translation: hyphenSpaceMatch[2].trim(),
-      };
+    // Fallback: find a hyphen surrounded by whitespace with a linear scan.
+    // Avoid a backtracking regex here because this value comes from user input.
+    for (let index = 1; index < line.length - 1; index += 1) {
+      if (
+        line[index] === '-' &&
+        line[index - 1].trim() === '' &&
+        line[index + 1].trim() === ''
+      ) {
+        return {
+          term: line.slice(0, index).trim(),
+          translation: line.slice(index + 1).trim(),
+        };
+      }
     }
 
     return null;
