@@ -1,28 +1,8 @@
 # LexiQuiz
 
-Повнофункціональний сучасний вебзастосунок для персоналізованого вивчення іноземних слів з інтервальним повторенням SM-2, масовим імпортом та адаптивними квізами.
+Повнофункціональний вебзастосунок для персоналізованого вивчення іноземних слів з інтервальним повторенням, масовим імпортом та адаптивними квізами.
 
 [Live Demo](http://localhost:3000) • [Swagger API Docs](http://localhost:3001/api/docs) • [Report Bug](https://github.com/Drotyk/LexiQuiz/issues)
-
----
-
-## Статус MVP
-
-- [x] JWT Авторизація (Access Token + HttpOnly Refresh Token Cookie)
-- [x] Ротація сесій та відкликання Refresh токенів (`UserSession`)
-- [x] Управління наборами слів (CRUD, приватність Private/Public)
-- [x] Розумний масовий імпорт з розпізнаванням складних дефісних слів (`mother-in-law`, `well-being`)
-- [x] Режим карток (Flashcards) з анімацією та клавіатурним управлінням
-- [x] Чотири типи квізів (`multiple_choice`, `direct_typing`, `reverse_typing`, `true_false`)
-- [x] Сервіс інтервального повторення Spaced Repetition (SM-2) із капом до 365 днів
-- [x] Статистика та аналітика (дашборд, складні слова, активність)
-- [x] Врахування часового поясу користувача для Daily Streak
-- [x] Контрольовані міграції TypeORM (`synchronize: false`)
-- [x] Fail-fast валідація зміних середовища та Rate Limiting (Throttler + Helmet)
-- [ ] Публічні спільнотні набори
-- [ ] Аудіовимова слів (Text-to-Speech)
-- [ ] Progressive Web App (PWA) режим
-- [ ] AI-генерація прикладів вживання слів
 
 ---
 
@@ -48,7 +28,25 @@
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 
 ---
+## Статус MVP
 
+- [x] JWT Авторизація (Access Token + HttpOnly Refresh Token Cookie)
+- [x] Ротація сесій та відкликання Refresh токенів (`UserSession`)
+- [x] Управління наборами слів (CRUD, приватність Private/Public)
+- [x] Розумний масовий імпорт з розпізнаванням складних дефісних слів (`mother-in-law`, `well-being`)
+- [x] Режим карток (Flashcards) з анімацією та клавіатурним управлінням
+- [x] Чотири типи квізів (`multiple_choice`, `direct_typing`, `reverse_typing`, `true_false`)
+- [x] Сервіс інтервального повторення Spaced Repetition (SM-2) із капом до 365 днів
+- [x] Статистика та аналітика (дашборд, складні слова, активність)
+- [x] Врахування часового поясу користувача для Daily Streak
+- [x] Контрольовані міграції TypeORM (`synchronize: false`)
+- [x] Fail-fast валідація зміних середовища та Rate Limiting (Throttler + Helmet)
+- [ ] Публічні спільнотні набори
+- [ ] Аудіовимова слів (Text-to-Speech)
+- [ ] Progressive Web App (PWA) режим
+- [ ] AI-генерація прикладів вживання слів
+
+---
 ## Структура проєкту
 
 ```text
