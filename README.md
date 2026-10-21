@@ -1,9 +1,6 @@
 # LexiQuiz
 
 Повнофункціональний вебзастосунок для персоналізованого вивчення іноземних слів з інтервальним повторенням, масовим імпортом та адаптивними квізами.
-
-[Live Demo](http://localhost:3000) • [Swagger API Docs](http://localhost:3001/api/docs) • [Report Bug](https://github.com/Drotyk/LexiQuiz/issues)
-
 ---
 
 ## Технологічний стек
